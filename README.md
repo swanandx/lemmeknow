@@ -21,7 +21,7 @@ Identify any mysterious text or analyze strings from a file, just ask `lemmeknow
 
 # 🧰 Usage
 
-If you have executable, the just pass TEXT or /PATH/TO/FILE as argument e.g. `lemmeknow secrets.pcap` and it will determine if the argument is a file or just a text and then perform analysis accordingly!
+If you have the executable, then just pass TEXT or /PATH/TO/FILE as argument e.g. `lemmeknow secrets.pcap` and it will determine if the argument is a file or just a text and then perform analysis accordingly!
 
 If you want output in JSON, then pass `--json`, e.g. `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
 
