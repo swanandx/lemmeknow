@@ -40,7 +40,7 @@ jobs:
         toolchain: stable
 
     - name: Build
-      run: cargo build --release --locked
+      run: cargo build --release
 
     - name: Upload binaries to release
       uses: actions/upload-artifact@v2
