@@ -40,7 +40,9 @@ jobs:
         toolchain: stable
 
     - name: Build
-      run: cargo build --release
+      run: |
+       cargo build --release
+       mv ${{ matrix.artifact_name }} ${{ matrix.asset_name }}
 
     # - name: Upload binaries to release
     #   uses: actions/upload-artifact@v2
@@ -50,5 +52,4 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        name: ${{ matrix.asset_name }}
-        files: ${{ matrix.artifact_name }}
+        files: ${{ matrix.asset_name }}

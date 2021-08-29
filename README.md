@@ -50,12 +50,14 @@ Clone repository
 
 then build and run
 - `cargo run`
+e.g. `cargo run -- <TEXT/FILENAME> [OPTIONS]`
 
 OR
 
 - `cargo build --release`
 - `cd target/release/`
 - `./lemmeknow`
+e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
 
 # :scream_cat: API 
