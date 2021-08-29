@@ -4,7 +4,7 @@
 <i>The fastest way to identify anything</i><br>
 </p>
 
-# lemmeknow :zap:
+# lemmeknow ⚡
 
 Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
 
@@ -19,7 +19,7 @@ Identify any mysterious text or analyze strings from a file, just ask `lemmeknow
 - and much more.
 
 
-# :toolbox: Usage
+# 🧰 Usage
 
 If you have executable, the just pass TEXT or /PATH/TO/FILE as argument e.g. `lemmeknow secrets.pcap` and it will determine if the argument is a file or just a text and then perform analysis accordingly!
 
@@ -28,21 +28,21 @@ If you want output in JSON, then pass `--json`, e.g. `lemmeknow UC11L3JDgDQMyH8i
 ![demo](images/demo.gif)
 
 
-# :telescope: Installation
+# 🔭 Installation
 
 
-### Download executable :chart_with_upwards_trend:
+### Download executable 📈
 
  You can directly download executable and run it. No need for any installation.
  - Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
 
 
-### Using `cargo` :crab:
+### Using `cargo` 🦀
 
 - `cargo install lemmeknow`
 
 
-### Build it from source :dart:
+### Build it from source 🎯
 
 Clone repository
 
@@ -60,7 +60,7 @@ OR
 e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
 
-# :scream_cat: API 
+# 🙀 API 
 
 Want to use this as a crate in your project? or make a web api for it? No worries! Just add a entry in your Cargo.toml
 
@@ -80,7 +80,7 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow" }
 
 Refer to [documentation](https://docs.rs/lemmeknow) for more info.
 
-# :construction: Contributing
+# 🚧 Contributing
 
 You can contribute by adding new regex, improving current regex, improving code performance or fixing minor bugs! Just open a issue or submit a PR.
 
