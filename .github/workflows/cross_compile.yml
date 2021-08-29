@@ -48,7 +48,7 @@ jobs:
     #     name: ${{ matrix.asset_name }}
     #     path: ${{ matrix.artifact_name }}
     - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: ${{ matrix.asset_name }}
-          files: ${{ matrix.artifact_name }}
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ matrix.asset_name }}
+        files: ${{ matrix.artifact_name }}
