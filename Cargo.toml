@@ -1,7 +1,7 @@
 [package]
 name = "lemmeknow"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 authors = ["swanandx"]
 description = "Identify any mysterious text or analyze strings from a file"
 readme = "README.md"
