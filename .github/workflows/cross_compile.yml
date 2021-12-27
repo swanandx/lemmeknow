@@ -25,7 +25,7 @@ jobs:
           - name: windows
             os: windows-latest
             artifact_name: target/release/lemmeknow.exe
-            asset_name: lemmeknow-windows
+            asset_name: lemmeknow-windows.exe
           - name: macos
             os: macos-latest
             artifact_name: target/release/lemmeknow
@@ -44,11 +44,6 @@ jobs:
        cargo build --release
        mv ${{ matrix.artifact_name }} ${{ matrix.asset_name }}
 
-    # - name: Upload binaries to release
-    #   uses: actions/upload-artifact@v2
-    #   with:
-    #     name: ${{ matrix.asset_name }}
-    #     path: ${{ matrix.artifact_name }}
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
