@@ -6,10 +6,10 @@
   ⚡ 🦀 🔍
 </div>
 <div align="center">
-  <strong>The fastest way to identify anything</strong>
+  <strong>Just ask `lemmeknow`!</strong>
 </div>
 <div align="center">
-  Want to know about any mysterious text or analyze strings from a file? just ask `lemmeknow`.
+  The fastest way to identify anything
 </div>
 
 <br />
