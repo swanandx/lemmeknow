@@ -1,22 +1,57 @@
-<p align='center'>
-<img src='images/logo.gif'>
-<p align="center">
-<i>The fastest way to identify anything</i><br>
-</p>
+<h1 align="center">
+    lemmeknow 
+</h1>
 
-# lemmeknow ⚡
+<div align="center">
+  ⚡ 🦀 🔍
+</div>
+<div align="center">
+  <strong>The fastest way to identify anything</strong>
+</div>
+<div align="center">
+  Want to know about any mysterious text or analyze strings from a file? just ask `lemmeknow`.
+</div>
 
-Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
+<br />
 
-`lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything, for identifying
+<div align="center">
+  <!-- Twitter -->
+  <a href="https://twitter.com/_swanandx">
+    <img src="https://img.shields.io/badge/twitter-%40__swanandx-blue"
+      alt="@_swanandx" />
+  </a>
+  <!-- GitHub issues -->
+  <a href="https://github.com/swanandx/lemmeknow/issues">
+    <img src="https://img.shields.io/github/issues/swanandx/lemmeknow"
+      alt="GitHub issues" />
+  </a>
+  <!-- GitHub stars -->
+  <a href="https://github.com/swanandx/lemmeknow/stargazers">
+    <img src="https://img.shields.io/github/stars/swanandx/lemmeknow"
+      alt="GitHub stars" />
+  </a>
+  <!-- GitHub forks -->
+  <a href="https://github.com/swanandx/lemmeknow/network">
+    <img src="https://img.shields.io/github/forks/swanandx/lemmeknow"
+      alt="GitHub forks" />
+  </a>
+  <!-- GitHub license -->
+  <a href="https://github.com/swanandx/lemmeknow/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/swanandx/lemmeknow"
+      alt="GitHub license" />
+  </a>
+</div>
 
-- All URLs
-- Emails
-- Phone numbers
-- Credit card numbers
-- Cryptocurrency addresses
-- Social Security Numbers
-- and much more.
+<div align="center">
+  <sub>Built with ❤︎ by
+  <a href="https://twitter.com/_swanandx">swanandx</a> and
+  <a href="https://github.com/swanandx/lemmeknow/graphs/contributors">
+    contributors
+  </a>
+</div>
+<!-- Thnx to choo for above README design <3 https://github.com/choojs/choo/blob/master/README.md -->
+
+`lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything. It is [PyWhat](https://github.com/bee-san/pyWhat) but in `Rust`!
 
 
 # 🧰 Usage
