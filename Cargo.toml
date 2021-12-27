@@ -9,7 +9,7 @@ repository = "https://github.com/swanandx/lemmeknow"
 homepage = "https://github.com/swanandx/lemmeknow"
 license = "MIT"
 keywords = ["cryptography", "cybersecurity", "regex", "forensics", "identify"]
-categories = ["accessibility", "Command line utilities", "text-processing", "parsing", "encoding"]
+categories = ["accessibility", "command-line-utilities", "text-processing", "parsing", "encoding"]
 documentation = "https://docs.rs/lemmeknow"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
