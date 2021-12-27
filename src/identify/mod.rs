@@ -5,8 +5,7 @@ use std::{fs, str};
 use crate::Data;
 use crate::Matches;
 
-static DATA: Lazy<Vec<Data>> = Lazy::new(load_regex);
-static REGEXES: Lazy<Vec<Regex>> = Lazy::new(build_regexes);
+static REGEXES: Lazy<Vec<(Regex,Data)>> = Lazy::new(build_regexes);
 
 /// Determine if the given text is a file or a string and then identifies accordingly.
 /// 
@@ -56,9 +55,9 @@ pub fn what_is(text: &str) -> Vec<Matches> {
 pub fn identify_text(text: &str) -> Vec<Matches> {
     let mut all_matches = Vec::<Matches>::new();
 
-    for (i, item) in (&*DATA).iter().enumerate() {
-        if (REGEXES[i]).is_match(text).unwrap() {
-            all_matches.push(Matches::new(text.to_string(), item.clone()));
+    for i in REGEXES.iter() {
+        if i.0.is_match(text).unwrap() {
+            all_matches.push(Matches::new(text.to_string(), i.1.clone()));
         }
     }
 
@@ -139,18 +138,19 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
     result
 }
 
-fn build_regexes() -> Vec<Regex> {
-    let mut regexes: Vec<Regex> = Vec::new();
-    for data in &*DATA {
-        regexes.push(Regex::new(&data.Regex).unwrap());
-    }
-    regexes
-}
-
-fn load_regex() -> Vec<Data> {
+fn build_regexes() -> Vec<(Regex,Data)> {
     // include_str! will include the data in binary
     // so we don't have to keep track of JSON file all the time after compiling the binary
-    // let data = fs::read_to_string(filename).expect("JSON file not found.");
     let data = include_str!("../data/regex.json");
-    serde_json::from_str(data).expect("Failed to parse JSON")
+    let json_data: Vec<Data> = serde_json::from_str(data).expect("Failed to parse JSON");
+
+    let mut regexes: Vec<(Regex,Data)> = Vec::new(); 
+    for data in json_data {
+        // Some regex from pywhat's regex.json might not work with fancy_regex
+        // So we are just considering the ones which are valid.
+        if let Ok(result) = Regex::new(&data.Regex) {
+            regexes.push((result, data))
+        }
+    }
+    regexes
 }
