@@ -51,8 +51,8 @@
 </div>
 <!-- Thnx to choo for above README design <3 https://github.com/choojs/choo/blob/master/README.md -->
 
-`lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything. It is [PyWhat](https://github.com/bee-san/pyWhat) but in `Rust`!
 
+`lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
 
 # 🧰 Usage
 
