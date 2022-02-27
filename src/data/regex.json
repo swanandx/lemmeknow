@@ -721,7 +721,7 @@
    },
    {
       "Name": "Google OAuth ID",
-      "Regex": "(?i)^([0-9(+-[0-9A-Za-z_]{32}.apps.googleusercontent.com)$",
+      "Regex": "(?i)^([0-9]+\\-[0-9A-Za-z_]+\\.apps\\.googleusercontent\\.com)$",
       "plural_name": false,
       "Description": null,
       "Exploit": null,

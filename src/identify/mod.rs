@@ -150,6 +150,8 @@ fn build_regexes() -> Vec<(Regex,Data)> {
         // So we are just considering the ones which are valid.
         if let Ok(result) = Regex::new(&data.Regex) {
             regexes.push((result, data))
+        } else {
+            panic!("Can't compile {data:#?}");
         }
     }
     regexes
