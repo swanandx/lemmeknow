@@ -1,5 +1,5 @@
 use clap::{clap_app, crate_authors, crate_description, crate_name, crate_version};
-use lemmeknow::{what_is, to_json, pprint};
+use lemmeknow::{pprint, to_json, what_is};
 
 const BANNER: &str = r#" _                               _                        
 | |                             | |                       

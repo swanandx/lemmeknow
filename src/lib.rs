@@ -2,16 +2,17 @@
 //!
 //! Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
 
+pub mod filter;
 pub mod identify;
 pub mod output;
 
 use serde::{Deserialize, Serialize};
 
-pub use self::identify::what_is;
-pub use self::identify::identify_text;
 pub use self::identify::analyze_file;
-pub use self::output::to_json;
+pub use self::identify::identify_text;
+pub use self::identify::what_is;
 pub use self::output::pprint;
+pub use self::output::to_json;
 
 /// structure for parsing data from JSON file.
 #[allow(non_snake_case)]
@@ -38,7 +39,6 @@ impl Matches {
         Matches { text, data }
     }
 }
-
 
 #[cfg(test)]
 mod tests {

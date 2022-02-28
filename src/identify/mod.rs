@@ -5,12 +5,12 @@ use std::{fs, str};
 use crate::Data;
 use crate::Matches;
 
-static REGEXES: Lazy<Vec<(Regex,Data)>> = Lazy::new(build_regexes);
+static REGEXES: Lazy<Vec<(Regex, Data)>> = Lazy::new(build_regexes);
 
 /// Determine if the given text is a file or a string and then identifies accordingly.
-/// 
+///
 /// This will call `analyze_file` if the argument is a file, else, will call `identify_text` otherwise.
-/// 
+///
 /// # Arguments
 ///
 /// * text: &str - Text or path to file which we want to identify.
@@ -23,7 +23,6 @@ static REGEXES: Lazy<Vec<(Regex,Data)>> = Lazy::new(build_regexes);
 /// assert_eq!(result[0].data.Name, "Ethereum (ETH) Wallet Address");
 /// ```
 
-
 pub fn what_is(text: &str) -> Vec<Matches> {
     if is_file(text) {
         analyze_file(text)
@@ -32,9 +31,8 @@ pub fn what_is(text: &str) -> Vec<Matches> {
     }
 }
 
-
 /// Identify the given text.
-/// 
+///
 /// Prefer using this if you do not want to analyze files.
 /// e.g. in a web API, you might just want to deal with text rather than files.
 ///
@@ -51,7 +49,6 @@ pub fn what_is(text: &str) -> Vec<Matches> {
 /// ```
 ///
 
-
 pub fn identify_text(text: &str) -> Vec<Matches> {
     let mut all_matches = Vec::<Matches>::new();
 
@@ -65,7 +62,7 @@ pub fn identify_text(text: &str) -> Vec<Matches> {
 }
 
 /// Analyze and identify strings present in a file.
-/// 
+///
 ///
 /// # Arguments
 ///
@@ -79,7 +76,7 @@ pub fn identify_text(text: &str) -> Vec<Matches> {
 /// let result = analyze_file(path_to_file);
 /// ```
 /// Use this if you know the argument is going to be a valid file which you have permission to read.
-/// 
+///
 /// # Panics
 ///  
 /// Panics if failed to read file.
@@ -96,7 +93,6 @@ pub fn analyze_file(filename: &str) -> Vec<Matches> {
 
     all_matches
 }
-
 
 // helper functions
 
@@ -138,13 +134,13 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
     result
 }
 
-fn build_regexes() -> Vec<(Regex,Data)> {
+fn build_regexes() -> Vec<(Regex, Data)> {
     // include_str! will include the data in binary
     // so we don't have to keep track of JSON file all the time after compiling the binary
     let data = include_str!("../data/regex.json");
     let json_data: Vec<Data> = serde_json::from_str(data).expect("Failed to parse JSON");
 
-    let mut regexes: Vec<(Regex,Data)> = Vec::new(); 
+    let mut regexes: Vec<(Regex, Data)> = Vec::new();
     for data in json_data {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.

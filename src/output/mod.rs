@@ -3,7 +3,7 @@ use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
 
 /// Convert `Vec<Matches>` to JSON
-/// 
+///
 /// Returns prettified JSON string.
 ///
 /// Helpful if you want to convert possible identifications to JSON
@@ -27,7 +27,7 @@ pub fn to_json(result: &[Matches]) -> String {
 }
 
 /// Pretty print `Vec<Matches>` in a tabular form.
-/// 
+///
 /// Use this if you want to print the possible identification in terminal
 /// with a pretty table.
 ///
@@ -78,7 +78,6 @@ pub fn pprint(result: &[Matches]) {
                 Cell::new(&item.data.Name),
                 Cell::new(description),
             ]);
-            
         }
         println!("{}", table);
     }
