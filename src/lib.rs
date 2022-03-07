@@ -2,15 +2,12 @@
 //!
 //! Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
 
-pub mod filter;
-pub mod identify;
+pub mod identifier;
 pub mod output;
 
 use serde::{Deserialize, Serialize};
 
-pub use self::identify::analyze_file;
-pub use self::identify::identify_text;
-pub use self::identify::what_is;
+pub use self::identifier::Identify;
 pub use self::output::pprint;
 pub use self::output::to_json;
 

@@ -1,5 +1,28 @@
-use clap::{clap_app, crate_authors, crate_description, crate_name, crate_version};
-use lemmeknow::{pprint, to_json, what_is};
+use lemmeknow::{pprint, to_json, Identify};
+use clap::Parser;
+
+
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+    /// Text which you want to identify
+    text: String,
+    /// Output in JSON format
+    #[clap(short, long)]
+    json: bool,
+    /// Minimum Rarity
+    #[clap(long="min")]
+    min_rarity: Option<f32>,
+    /// Maximum Rarity
+    #[clap(long="max")]
+    max_rarity: Option<f32>,
+    /// File support
+    #[clap(short, long)]
+    file_support: bool,
+    /// Match boundaryless regex
+    #[clap(short, long)]
+    boundaryless: bool,
+}
 
 const BANNER: &str = r#" _                               _                        
 | |                             | |                       
@@ -12,22 +35,16 @@ const BANNER: &str = r#" _                               _
                                                           "#;
 
 fn main() {
-    let matches = clap_app!((crate_name!()) =>
-        (version: crate_version!())
-        (author: crate_authors!())
-        (about: crate_description!())
-        (@arg TEXT: +takes_value +required "Mysterious text which you want to identify")
-        (@arg JSON: -j --json "Output in JSON format")
-    )
-    .get_matches();
+    let args = Args::parse();
 
-    if let Some(text) = matches.value_of("TEXT") {
-        let result = what_is(text);
-        if matches.is_present("JSON") {
+        let identifier = Identify::default()
+            .file_support(true)
+            .exclude_tags(&[String::from("URL")]);
+        let result = identifier.identify(&args.text);
+        if args.json {
             println!("{}", to_json(&result));
         } else {
             println!("{}", BANNER);
             pprint(&result);
         }
-    }
 }

@@ -16,9 +16,10 @@ use comfy_table::*;
 /// # Examples
 ///
 /// ```
-/// use lemmeknow::{what_is, to_json};
-/// let result = what_is("UC11L3JDgDQMyH8iolKkVZ4w");
-/// println!("{}", to_json(&result));
+/// use lemmeknow::{Identify, pprint};
+/// let identifier = Identify::default();
+/// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+/// pprint(&result);
 /// ```
 ///
 
@@ -38,8 +39,9 @@ pub fn to_json(result: &[Matches]) -> String {
 /// # Examples
 ///
 /// ```
-/// use lemmeknow::{what_is, pprint};
-/// let result = what_is("UC11L3JDgDQMyH8iolKkVZ4w");
+/// use lemmeknow::{Identify, pprint};
+/// let identifier = Identify::default();
+/// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
 /// pprint(&result);
 /// ```
 ///
