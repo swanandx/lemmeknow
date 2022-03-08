@@ -60,17 +60,14 @@
 
 ## 🧰 Usage 
 
-Pass `TEXT` or `/PATH/TO/FILE` as argument 
+Pass `TEXT` or `/PATH/TO/FILE` as argument. If you want output in JSON format, then pass `-j / --json` flag.
 
 - `lemmeknow [OPTIONS] <TEXT/FILENAME>`
- 
 
-If you want output in JSON, then pass `--json`
-
-- `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
+*e.g.* `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
 
 
-Run `lemmeknow --help` for more usages!
+> Run `lemmeknow --help` for all options!
 
 ![demo](images/demo.gif)
 
@@ -98,9 +95,9 @@ Clone repository
 then build and run
 - `cargo run`
 
-e.g. `cargo run -- <TEXT/FILENAME> [OPTIONS]`
+*e.g.* `cargo run -- <TEXT/FILENAME> [OPTIONS]`
 
-*OR*
+OR
 
 - `cargo build --release`
 - `cd target/release/`
