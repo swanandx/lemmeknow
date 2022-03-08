@@ -56,17 +56,16 @@
 
 `lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
 
-<br />
 
 ## Usage 🧰
 
 Pass TEXT or /PATH/TO/FILE as argument 
 
-> `lemmeknow [OPTIONS] <TEXT/FILENAME>`
+- `lemmeknow [OPTIONS] <TEXT/FILENAME>`
  
 If you want output in JSON, then pass `--json`
 
-> `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
+- `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
 
 Run `lemmeknow --help` for more usages!
 
@@ -79,29 +78,29 @@ Run `lemmeknow --help` for more usages!
 ### Download executable 📈
 
  You can directly download executable and run it. No need for any installation.
- > Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
+ - Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
 
 
 ### Using `cargo` 🦀
 
-> `cargo install lemmeknow`
+- `cargo install lemmeknow`
 
 
 ### Build it from source 🎯
 
 Clone repository
 
-> `git clone https://github.com/swanandx/lemmeknow && cd lemmeknow`
+- `git clone https://github.com/swanandx/lemmeknow && cd lemmeknow`
 
 then build and run
-> `cargo run`
+- `cargo run`
 e.g. `cargo run -- <TEXT/FILENAME> [OPTIONS]`
 
 OR
 
-> `cargo build --release`
-> `cd target/release/`
-> `./lemmeknow`
+- `cargo build --release`
+- `cd target/release/`
+- `./lemmeknow`
 e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
 
