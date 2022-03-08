@@ -56,16 +56,21 @@
 
 `lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
 
+<br />
 
-## Usage 🧰
+## 🧰 Usage 
 
-Pass TEXT or /PATH/TO/FILE as argument 
+<br />
+
+Pass `TEXT` or `/PATH/TO/FILE` as argument 
 
 - `lemmeknow [OPTIONS] <TEXT/FILENAME>`
  
+
 If you want output in JSON, then pass `--json`
 
 - `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
+
 
 Run `lemmeknow --help` for more usages!
 
@@ -74,17 +79,20 @@ Run `lemmeknow --help` for more usages!
 
 ## 🔭 Installation
 
+<br />
 
 ### Download executable 📈
 
  You can directly download executable and run it. No need for any installation.
- - Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
+ > Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
 
+<br />
 
 ### Using `cargo` 🦀
 
 - `cargo install lemmeknow`
 
+<br />
 
 ### Build it from source 🎯
 
@@ -94,15 +102,18 @@ Clone repository
 
 then build and run
 - `cargo run`
+
 e.g. `cargo run -- <TEXT/FILENAME> [OPTIONS]`
 
-OR
+*OR*
 
 - `cargo build --release`
 - `cd target/release/`
 - `./lemmeknow`
+
 e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
+<br />
 
 ## 🚀 API  
 
@@ -124,10 +135,15 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow" }
 
 Refer to [documentation](https://docs.rs/lemmeknow) for more info.
 
+<br />
+
 ## 🚧 Contributing 
 
 You can contribute by adding new regex, improving current regex, improving code performance or fixing minor bugs! Just open a issue or submit a PR.
 
+<br />
+
 ## 💖 Acknowledgement
+
  This project is inspired by [PyWhat](https://github.com/bee-san/pyWhat)!
  Thanks to developer of it for the awesome idea <3 .
