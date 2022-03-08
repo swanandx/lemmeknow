@@ -13,7 +13,9 @@ pub struct Identify {
     pub tags: Vec<String>,
     /// Only include Data which doesn't have any of the `excluded_tags`
     pub exclude_tags: Vec<String>,
+    /// Use boundaryless regex
     pub boundaryless: bool,
+    /// Scan files having supplied text as filename
     pub file_support: bool,
 }
 
@@ -22,6 +24,7 @@ impl Default for Identify {
         Self::new()
     }
 }
+
 impl Identify {
     fn new() -> Identify {
         Identify {
@@ -44,7 +47,7 @@ impl Identify {
         self
     }
 
-    pub fn tags(mut self, tags: &[String]) -> Identify {
+    pub fn include_tags(mut self, tags: &[String]) -> Identify {
         self.tags.extend_from_slice(tags);
         self
     }
@@ -58,7 +61,6 @@ impl Identify {
         self.boundaryless = boundaryless;
         self
     }
-
     pub fn file_support(mut self, support: bool) -> Identify {
         self.file_support = support;
         self
@@ -66,6 +68,22 @@ impl Identify {
 }
 
 impl Identify {
+    /// Identify the given text.
+    ///
+    /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
+    ///
+    /// # Arguments
+    ///
+    /// * text: &str - text which we want to identify
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let identifier = lemmeknow::Identify::default();
+    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// assert_eq!(result[0].data.Name, "YouTube Channel ID");
+    /// ```
+    ///
     pub fn identify(&self, text: &str) -> Vec<Matches> {
         let mut json_data: Vec<Data> = load_regexes();
 

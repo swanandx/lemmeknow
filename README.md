@@ -56,16 +56,18 @@
 
 `lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
 
-# 🧰 Usage
+## Usage 🧰
 
-If you have the executable, then just pass TEXT or /PATH/TO/FILE as argument e.g. `lemmeknow secrets.pcap` and it will determine if the argument is a file or just a text and then perform analysis accordingly!
+Pass TEXT or /PATH/TO/FILE as argument e.g. `lemmeknow secrets.pcap` and it will determine if the argument is a file or just a text and then perform analysis accordingly!
 
 If you want output in JSON, then pass `--json`, e.g. `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
+
+Run `lemmeknow --help` for more usages!
 
 ![demo](images/demo.gif)
 
 
-# 🔭 Installation
+## Installation 🔭
 
 
 ### Download executable 📈
@@ -97,9 +99,9 @@ OR
 e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
 
-# 🙀 API 
+## API 🚀 
 
-Want to use this as a crate in your project? or make a web api for it? No worries! Just add a entry in your Cargo.toml
+Want to use this as a crate in your project? or make a web api for it? No worries! Just add a entry in your `Cargo.toml`
 
 ```toml
 [dependencies]
@@ -117,10 +119,10 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow" }
 
 Refer to [documentation](https://docs.rs/lemmeknow) for more info.
 
-# 🚧 Contributing
+## Contributing 🚧
 
 You can contribute by adding new regex, improving current regex, improving code performance or fixing minor bugs! Just open a issue or submit a PR.
 
-# Acknowledgement
+## Acknowledgement
  This project is inspired by [PyWhat](https://github.com/bee-san/pyWhat)!
  Thanks to developer of it for the awesome idea <3 .

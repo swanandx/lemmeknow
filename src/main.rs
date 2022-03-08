@@ -1,6 +1,5 @@
-use lemmeknow::{pprint, to_json, Identify};
 use clap::Parser;
-
+use lemmeknow::{pprint, to_json, Identify};
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -11,17 +10,23 @@ struct Args {
     #[clap(short, long)]
     json: bool,
     /// Minimum Rarity
-    #[clap(long="min")]
-    min_rarity: Option<f32>,
+    #[clap(long = "min", default_value_t = 0.1)]
+    min_rarity: f32,
     /// Maximum Rarity
-    #[clap(long="max")]
-    max_rarity: Option<f32>,
-    /// File support
+    #[clap(long = "max", default_value_t = 1.0)]
+    max_rarity: f32,
+    /// Only identify text, Do not scan file
     #[clap(short, long)]
-    file_support: bool,
-    /// Match boundaryless regex
+    text_only: bool,
+    /// Use boundaryless regex to identify text
     #[clap(short, long)]
     boundaryless: bool,
+    /// Only include matches with these tags
+    #[clap(short, long, value_delimiter(','))]
+    include: Option<Vec<String>>,
+    /// Exclude matches having these tags
+    #[clap(short, long, value_delimiter(','))]
+    exclude: Option<Vec<String>>,
 }
 
 const BANNER: &str = r#" _                               _                        
@@ -37,14 +42,19 @@ const BANNER: &str = r#" _                               _
 fn main() {
     let args = Args::parse();
 
-        let identifier = Identify::default()
-            .file_support(true)
-            .exclude_tags(&[String::from("URL")]);
-        let result = identifier.identify(&args.text);
-        if args.json {
-            println!("{}", to_json(&result));
-        } else {
-            println!("{}", BANNER);
-            pprint(&result);
-        }
+    let identifier = Identify::default()
+        .min_rarity(args.min_rarity)
+        .max_rarity(args.max_rarity)
+        .include_tags(&args.include.unwrap_or_default())
+        .exclude_tags(&args.exclude.unwrap_or_default())
+        .boundaryless(args.boundaryless)
+        .file_support(!args.text_only); // file_support is true if text_only is false, and vice-versa
+
+    let result = identifier.identify(&args.text);
+    if args.json {
+        println!("{}", to_json(&result));
+    } else {
+        println!("{}", BANNER);
+        pprint(&result);
+    }
 }

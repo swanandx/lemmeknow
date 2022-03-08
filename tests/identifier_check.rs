@@ -1,6 +1,6 @@
 use lemmeknow::Identify;
 #[test]
-fn identify_works(){
+fn identify_works() {
     let identifier = Identify::default();
     let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
     assert_eq!(result[0].data.Name, "YouTube Channel ID");
