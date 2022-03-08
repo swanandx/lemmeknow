@@ -60,8 +60,6 @@
 
 ## 🧰 Usage 
 
-<br />
-
 Pass `TEXT` or `/PATH/TO/FILE` as argument 
 
 - `lemmeknow [OPTIONS] <TEXT/FILENAME>`
@@ -76,24 +74,21 @@ Run `lemmeknow --help` for more usages!
 
 ![demo](images/demo.gif)
 
-
-## 🔭 Installation
-
 <br />
 
+## 🔭 Installation
+---
 ### Download executable 📈
 
  You can directly download executable and run it. No need for any installation.
  > Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
 
-<br />
-
+---
 ### Using `cargo` 🦀
 
 - `cargo install lemmeknow`
 
-<br />
-
+---
 ### Build it from source 🎯
 
 Clone repository
@@ -113,6 +108,7 @@ e.g. `cargo run -- <TEXT/FILENAME> [OPTIONS]`
 
 e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
 
+---
 <br />
 
 ## 🚀 API  
@@ -133,7 +129,7 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow" }
 
 ```
 
-Refer to [documentation](https://docs.rs/lemmeknow) for more info.
+> Refer to [documentation](https://docs.rs/lemmeknow) for more info.
 
 <br />
 
