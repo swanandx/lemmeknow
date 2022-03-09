@@ -151,26 +151,30 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
 
     let mut printable_text: Vec<String> = Vec::new();
     let mut buffer: Vec<u8> = Vec::new();
-    let mut current_buffer = false;
+    let mut use_current_buffer = false;
 
     //we only need the human readable strings from the file.
     for character in file {
         if character.is_ascii_graphic() {
             // Doesn't consider whitespace as a graphic!
-            current_buffer = true;
+            use_current_buffer = true;
             buffer.push(character);
-        } else if current_buffer {
-            //text with length smaller than 4 most likely won't be of our use.
+        } else if use_current_buffer {
+            // If the char isn't ascii graphic, that means this is the end for our string which we are intresed in
+            // string with length less than 4 most likely won't be of our use.
+            // If it has length more than 4, then push it to our `printable_text`
             if buffer.len() >= 4 {
-                printable_text.push((str::from_utf8(&buffer).unwrap()).to_string());
+                printable_text.push(String::from_utf8(buffer.clone()).unwrap());
             }
 
+            // Clear the buffer so that current contents of it won't affect the next string.
             buffer.clear();
-            current_buffer = false;
+            // We set this to false because we don't want to use buffer until we get a ascii graphic!
+            use_current_buffer = false;
         }
     }
 
-    printable_text.push((str::from_utf8(&buffer).unwrap()).to_string());
+    printable_text.push(String::from_utf8(buffer).unwrap());
 
     printable_text
 }
