@@ -65,28 +65,8 @@ impl Identify {
         self.file_support = support;
         self
     }
-}
 
-impl Identify {
-    /// Identify the given text.
-    ///
-    /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
-    ///
-    /// # Arguments
-    ///
-    /// * text: &str - text which we want to identify
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// let identifier = lemmeknow::Identify::default();
-    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
-    /// assert_eq!(result[0].data.Name, "YouTube Channel ID");
-    /// ```
-    ///
-    pub fn identify(&self, text: &str) -> Vec<Matches> {
-        let mut json_data: Vec<Data> = load_regexes();
-
+    fn filter_json_data(&self, json_data: &mut Vec<Data>) {
         if self.boundaryless {
             for data in json_data.iter_mut() {
                 data.Regex = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
@@ -112,6 +92,30 @@ impl Identify {
         if !self.exclude_tags.is_empty() {
             json_data.retain(|x| self.exclude_tags.iter().any(|y| !x.Tags.contains(y)))
         }
+    }
+}
+
+impl Identify {
+    /// Identify the given text.
+    ///
+    /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
+    ///
+    /// # Arguments
+    ///
+    /// * text: &str - text which we want to identify
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let identifier = lemmeknow::Identify::default();
+    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// assert_eq!(result[0].data.Name, "YouTube Channel ID");
+    /// ```
+    ///
+    pub fn identify(&self, text: &str) -> Vec<Matches> {
+        let mut json_data: Vec<Data> = load_regexes();
+
+        self.filter_json_data(&mut json_data);
 
         let mut strings: Vec<String> = Vec::<String>::new();
 
@@ -145,19 +149,20 @@ fn is_file(name: &str) -> bool {
 fn read_file_to_strings(filename: &str) -> Vec<String> {
     let file = fs::read(filename).expect("File not found");
 
-    let mut printable_text: Vec<Vec<u8>> = Vec::new();
+    let mut printable_text: Vec<String> = Vec::new();
     let mut buffer: Vec<u8> = Vec::new();
     let mut current_buffer = false;
 
     //we only need the human readable strings from the file.
-    for charecter in file {
-        if charecter.is_ascii_graphic() {
+    for character in file {
+        if character.is_ascii_graphic() {
+            // Doesn't consider whitespace as a graphic!
             current_buffer = true;
-            buffer.push(charecter);
+            buffer.push(character);
         } else if current_buffer {
             //text with length smaller than 4 most likely won't be of our use.
             if buffer.len() >= 4 {
-                printable_text.push(buffer.clone());
+                printable_text.push((str::from_utf8(&buffer).unwrap()).to_string());
             }
 
             buffer.clear();
@@ -165,15 +170,9 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
         }
     }
 
-    printable_text.push(buffer);
+    printable_text.push((str::from_utf8(&buffer).unwrap()).to_string());
 
-    let mut result: Vec<String> = Vec::new();
-
-    for item in &printable_text {
-        result.push((str::from_utf8(item).unwrap()).to_string())
-    }
-
-    result
+    printable_text
 }
 
 fn load_regexes() -> Vec<Data> {
