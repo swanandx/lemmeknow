@@ -18,9 +18,9 @@ struct Args {
     /// Only identify text, Do not scan file
     #[clap(short, long)]
     text_only: bool,
-    /// Use boundaryless regex to identify text
+    /// Disable boundaryless regex mode
     #[clap(short, long)]
-    boundaryless: bool,
+    boundary: bool,
     /// Only include matches with these tags
     #[clap(short, long, value_delimiter(','))]
     include: Option<Vec<String>>,
@@ -47,7 +47,7 @@ fn main() {
         .max_rarity(args.max_rarity)
         .include_tags(&args.include.unwrap_or_default())
         .exclude_tags(&args.exclude.unwrap_or_default())
-        .boundaryless(args.boundaryless)
+        .boundaryless(!args.boundary) // boundaryless is true if boundary is false, and vice-versa
         .file_support(!args.text_only); // file_support is true if text_only is false, and vice-versa
 
     let result = identifier.identify(&args.text);
