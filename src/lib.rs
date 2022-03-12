@@ -11,6 +11,13 @@
  * [dependencies]
  * lemmeknow = { version = "0.3.0", default-features = false }
  * ```
+ * 
+ * OR by using github repositoy:
+ * 
+ * ```toml
+ * [dependencies]
+ * lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = false }
+ * ```
  *
  * # Example: To identify a text
  *
