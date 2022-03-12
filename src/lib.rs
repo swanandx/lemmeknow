@@ -8,8 +8,8 @@ pub mod output;
 use serde::{Deserialize, Serialize};
 
 pub use self::identifier::Identify;
-pub use self::output::pprint;
 pub use self::output::to_json;
+pub use self::output::PrintMode;
 
 /// structure for parsing data from JSON file.
 #[allow(non_snake_case)]

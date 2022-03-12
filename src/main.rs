@@ -1,7 +1,7 @@
 use clap::Parser;
-use lemmeknow::{pprint, to_json, Identify};
+use lemmeknow::{to_json, Identify, PrintMode};
 
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
     /// Text which you want to identify
@@ -27,6 +27,9 @@ struct Args {
     /// Exclude matches having these tags
     #[clap(short, long, value_delimiter(','))]
     exclude: Option<Vec<String>>,
+    /// Print output with more details
+    #[clap(short, long)]
+    verbose: bool,
 }
 
 const BANNER: &str = r#" _                               _                        
@@ -56,6 +59,11 @@ fn main() {
         println!("{result_in_json}");
     } else {
         println!("{BANNER}");
-        pprint(&result);
+        let printer = if args.verbose {
+            PrintMode::Verbose
+        } else {
+            PrintMode::Normal
+        };
+        printer.print(&result);
     }
 }
