@@ -2,32 +2,6 @@ use crate::Matches;
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
 
-/// Convert `Vec<Matches>` to JSON
-///
-/// Returns prettified JSON string.
-///
-/// Helpful if you want to convert possible identifications to JSON
-/// for using in web APIs or something else.
-///
-/// # Arguments
-///
-/// * result: &[Matches] - Reference to `Vec<Matches>`.
-///
-/// # Examples
-///
-/// ```
-/// use lemmeknow::{Identify, to_json};
-/// let identifier = Identify::default();
-/// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
-/// let result_in_json = to_json(&result);
-/// println!("{result_in_json}");
-/// ```
-///
-
-pub fn to_json(result: &[Matches]) -> String {
-    serde_json::to_string_pretty(result).unwrap()
-}
-
 /// Modes defining how the output shall be printed
 pub enum PrintMode {
     Normal,

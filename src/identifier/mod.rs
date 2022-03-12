@@ -4,6 +4,7 @@ use std::{fs, str};
 use crate::Data;
 use crate::Matches;
 
+#[derive(Default)]
 pub struct Identify {
     /// Keep Data having minimun Rarity of supplied `min_rarity`
     pub min_rarity: Option<f32>,
@@ -19,24 +20,8 @@ pub struct Identify {
     pub file_support: bool,
 }
 
-impl Default for Identify {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
+// Filter implementation
 impl Identify {
-    fn new() -> Identify {
-        Identify {
-            min_rarity: None,
-            max_rarity: None,
-            tags: Vec::new(),
-            exclude_tags: Vec::new(),
-            boundaryless: false,
-            file_support: false,
-        }
-    }
-
     pub fn min_rarity(mut self, rarity: f32) -> Identify {
         self.min_rarity = Some(rarity);
         self
@@ -95,6 +80,7 @@ impl Identify {
     }
 }
 
+// Identifier implementation
 impl Identify {
     /// Identify the given text.
     ///
@@ -140,6 +126,33 @@ impl Identify {
     }
 }
 
+// Output Implementation
+impl Identify {
+    /// Convert `Vec<Matches>` to JSON
+    ///
+    /// Returns prettified JSON string.
+    ///
+    /// Helpful if you want to convert possible identifications to JSON
+    /// for using in web APIs or something else.
+    ///
+    /// # Arguments
+    ///
+    /// * result: &[Matches] - Reference to `Vec<Matches>`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lemmeknow::{Identify};
+    /// let identifier = Identify::default();
+    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// let result_in_json = Identify::to_json(&result);
+    /// println!("{result_in_json}");
+    /// ```
+    ///
+    pub fn to_json(result: &[Matches]) -> String {
+        serde_json::to_string_pretty(result).unwrap_or_default()
+    }
+}
 // helper functions
 
 fn is_file(name: &str) -> bool {
@@ -183,7 +196,7 @@ fn load_regexes() -> Vec<Data> {
     // include_str! will include the data in binary
     // so we don't have to keep track of JSON file all the time after compiling the binary
     let data = include_str!("../data/regex.json");
-    serde_json::from_str(data).expect("Failed to parse JSON")
+    serde_json::from_str::<Vec<Data>>(data).expect("Failed to parse JSON")
 }
 
 fn build_regexes(loaded_data: Vec<Data>) -> Vec<(Regex, Data)> {

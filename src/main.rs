@@ -1,5 +1,5 @@
 use clap::Parser;
-use lemmeknow::{to_json, Identify, PrintMode};
+use lemmeknow::{Identify, PrintMode};
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -55,7 +55,7 @@ fn main() {
 
     let result = identifier.identify(&args.text);
     if args.json {
-        let result_in_json = to_json(&result);
+        let result_in_json = Identify::to_json(&result);
         println!("{result_in_json}");
     } else {
         println!("{BANNER}");
