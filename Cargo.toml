@@ -14,6 +14,16 @@ documentation = "https://docs.rs/lemmeknow"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+name = "lemmeknow"
+path = "src/lib.rs"
+crate-type = ["lib"]
+
+
+[[bin]]
+name = "lemmeknow"
+path = "src/main.rs"
+
 [dependencies]
 fancy-regex = "0.8.0"
 serde = { version = "1.0", features = ["derive"] }
@@ -24,3 +34,4 @@ clap = { version = "3.1.6", features = ["derive"] }
 [profile.release]
 lto = true
 panic = "abort"
+strip = true
