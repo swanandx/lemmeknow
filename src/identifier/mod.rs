@@ -1,3 +1,5 @@
+//! For identifying text / analyzing files
+
 use fancy_regex::Regex;
 use std::{fs, str};
 
@@ -128,7 +130,7 @@ impl Identify {
 
 // Output Implementation
 impl Identify {
-    /// Convert `Vec<Matches>` to JSON
+    /// Convert [`Vec<Matches>`] to JSON
     ///
     /// Returns prettified JSON string.
     ///
@@ -142,7 +144,7 @@ impl Identify {
     /// # Examples
     ///
     /// ```
-    /// use lemmeknow::{Identify};
+    /// use lemmeknow::Identify;
     /// let identifier = Identify::default();
     /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
     /// let result_in_json = Identify::to_json(&result);

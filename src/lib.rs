@@ -1,14 +1,39 @@
-//! # lemmeknow
-//!
-//! Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
+/*!
+ * lemmeknow can be used for identifying mysterious text
+ * or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
+ *
+ * # Usage
+ *
+ * If you want to use it as a library and do not want to pretty print output as table
+ * then set `default-features=false` in your `Cargo.toml`:
+ *
+ * ```toml
+ * [dependencies]
+ * lemmeknow = { version = "0.3.0", default-features = false }
+ * ```
+ *
+ * # Example: To identify a text
+ *
+ * Let us say we want to identify a text and then get the output as pretty JSON
+ *
+ * ```rust
+ * use lemmeknow::Identify;
+ * let identifier = Identify::default();
+ * let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+ * let result_in_json = Identify::to_json(&result);
+ * println!("{result_in_json}");
+ * ```
+ *
+ * */
 
 pub mod identifier;
-#[cfg(feature = "cli")]
-pub mod output;
+pub use self::identifier::Identify;
 
 use serde::{Deserialize, Serialize};
 
-pub use self::identifier::Identify;
+#[cfg(feature = "cli")]
+pub mod output;
+
 #[cfg(feature = "cli")]
 pub use self::output::PrintMode;
 

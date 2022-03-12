@@ -1,25 +1,44 @@
+/*!
+ * For pretty printing the output to termial.
+ *
+ * > This requires `cli` feature to be enabled. (enabled by default)
+ *
+ * # Example:
+ *
+ * Print results in a beautiful table!
+ *
+ * ```rust
+ * use lemmeknow::{Identify, PrintMode};
+ * let identifier = Identify::default();
+ * let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+ * let printer = PrintMode::Normal;
+ * printer.print(&result);
+ * ```
+*/
+
 use crate::Matches;
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
 
 /// Modes defining how the output shall be printed
+/// > Requires `cli` feature
 pub enum PrintMode {
     Normal,
     Verbose,
 }
 
 impl PrintMode {
-    /// Print `Vec<Matches>` in a tabular form.
+    /// Print [`Vec<Matches>`] in a tabular form.
     ///
     /// Use this if you want to print the possible identification in terminal
     /// with a pretty table.
     ///
-    /// * `PrintMode::Normal` will print "Matched text", "Identified as" and "Description" columns.
-    /// * `PrintMode::Verbose` will print "Rarity" and "Tags" along with other columns.
+    /// * [`PrintMode::Normal`] will print "Matched text", "Identified as" and "Description" columns.
+    /// * [`PrintMode::Verbose`] will print "Rarity" and "Tags" along with other columns.
     ///
     /// # Arguments
     ///
-    /// * result: &[Matches] - Reference to `Vec<Matches>`.
+    /// * result: `&Matches` - Reference to [`Vec<Matches>`].
     ///
     /// # Examples
     ///
@@ -27,7 +46,7 @@ impl PrintMode {
     /// use lemmeknow::{Identify, PrintMode};
     /// let identifier = Identify::default();
     /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
-    /// let printer = PrintMode::Normal;
+    /// let printer = PrintMode::Verbose;
     ///
     /// printer.print(&result);
     /// ```
