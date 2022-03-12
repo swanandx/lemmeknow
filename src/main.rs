@@ -52,9 +52,10 @@ fn main() {
 
     let result = identifier.identify(&args.text);
     if args.json {
-        println!("{}", to_json(&result));
+        let result_in_json = to_json(&result);
+        println!("{result_in_json}");
     } else {
-        println!("{}", BANNER);
+        println!("{BANNER}");
         pprint(&result);
     }
 }

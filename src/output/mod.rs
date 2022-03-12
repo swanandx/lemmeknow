@@ -69,9 +69,9 @@ pub fn pprint(result: &[Matches]) {
         println!("\x1b[0;32mFound Possible Identifications :)\x1b[0m");
         for item in result.iter() {
             let description = match (item.data.Description.as_ref(), item.data.URL.as_ref()) {
-                (Some(des), Some(url)) => format!("{}\n Check URL: {}{}", des, url, &item.text),
+                (Some(des), Some(url)) => format!("{des}\n Check URL: {url}{}", &item.text),
                 (Some(des), None) => des.to_string(),
-                (None, Some(url)) => format!("URL:\n {}{}", url, &item.text),
+                (None, Some(url)) => format!("URL:\n {url}{}", &item.text),
                 (None, None) => "None".to_string(),
             };
 
@@ -81,6 +81,6 @@ pub fn pprint(result: &[Matches]) {
                 Cell::new(description),
             ]);
         }
-        println!("{}", table);
+        println!("{table}");
     }
 }
