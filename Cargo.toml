@@ -19,17 +19,21 @@ name = "lemmeknow"
 path = "src/lib.rs"
 crate-type = ["lib"]
 
+[features]
+default = ["cli"]
+cli = ["comfy-table", "clap"]
 
 [[bin]]
 name = "lemmeknow"
 path = "src/main.rs"
+required-features = ["cli"]
 
 [dependencies]
 fancy-regex = "0.8.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-comfy-table = "5.0.1"
-clap = { version = "3.1.6", features = ["derive"] }
+comfy-table = {version = "5.0.1", optional = true }
+clap = { version = "3.1.6", features = ["derive"], optional=true }
 
 [profile.release]
 lto = true

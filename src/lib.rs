@@ -3,11 +3,13 @@
 //! Identify any mysterious text or analyze strings from a file, just ask `lemmeknow`.
 
 pub mod identifier;
+#[cfg(feature = "cli")]
 pub mod output;
 
 use serde::{Deserialize, Serialize};
 
 pub use self::identifier::Identify;
+#[cfg(feature = "cli")]
 pub use self::output::PrintMode;
 
 /// structure for parsing data from JSON file.
