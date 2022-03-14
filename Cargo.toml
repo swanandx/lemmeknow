@@ -36,6 +36,7 @@ comfy-table = { version = "5.0.1", optional = true }
 clap = { version = "3.1.6", features = ["derive"], optional = true }
 
 [profile.release]
-lto = true
+lto = "fat"
 panic = "abort"
-strip = true
+strip = "symbols"
+codegen-units = 1
