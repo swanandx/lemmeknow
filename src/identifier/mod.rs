@@ -6,6 +6,20 @@ use std::{fs, str};
 use crate::Data;
 use crate::Matches;
 
+struct RegexData {
+    compiled_regex: Regex,
+    data: Data,
+}
+
+impl RegexData {
+    fn new(compiled_regex: Regex, data: Data) -> RegexData {
+        RegexData {
+            compiled_regex,
+            data,
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Identify {
     /// Keep Data having minimun Rarity of supplied `min_rarity`
@@ -118,8 +132,8 @@ impl Identify {
 
         for text in &strings {
             for i in &regexes {
-                if i.0.is_match(text).unwrap() {
-                    all_matches.push(Matches::new(text.to_string(), i.1.clone()));
+                if i.compiled_regex.is_match(text).unwrap() {
+                    all_matches.push(Matches::new(text.to_string(), i.data.clone()));
                 }
             }
         }
@@ -155,8 +169,8 @@ impl Identify {
         serde_json::to_string_pretty(result).unwrap_or_default()
     }
 }
-// helper functions
 
+// helper functions
 fn is_file(name: &str) -> bool {
     fs::metadata(name).is_ok()
 }
@@ -201,13 +215,13 @@ fn load_regexes() -> Vec<Data> {
     serde_json::from_str::<Vec<Data>>(data).expect("Failed to parse JSON")
 }
 
-fn build_regexes(loaded_data: Vec<Data>) -> Vec<(Regex, Data)> {
-    let mut regexes: Vec<(Regex, Data)> = Vec::new();
+fn build_regexes(loaded_data: Vec<Data>) -> Vec<RegexData> {
+    let mut regexes: Vec<RegexData> = Vec::new();
     for data in loaded_data {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.
         if let Ok(result) = Regex::new(&data.Regex) {
-            regexes.push((result, data))
+            regexes.push(RegexData::new(result, data))
         } else {
             panic!("Can't compile {data:#?}");
         }
