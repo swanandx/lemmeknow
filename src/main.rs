@@ -2,7 +2,7 @@ use clap::Parser;
 use lemmeknow::{Identify, PrintMode};
 
 #[derive(Parser)]
-#[clap(author, version, about, long_about = None)]
+#[clap(author, version, about, long_about = "https://github.com/swanandx/lemmeknow")]
 struct Args {
     /// Text which you want to identify
     text: String,
@@ -32,15 +32,6 @@ struct Args {
     verbose: bool,
 }
 
-const BANNER: &str = r#" _                               _                        
-| |                             | |                       
-| | ___ _ __ ___  _ __ ___   ___| | ___ __   _____      __
-| |/ _ \ '_ ` _ \| '_ ` _ \ / _ \ |/ / '_ \ / _ \ \ /\ / /
-| |  __/ | | | | | | | | | |  __/   <| | | | (_) \ V  V / 
-|_|\___|_| |_| |_|_| |_| |_|\___|_|\_\_| |_|\___/ \_/\_/  
-                                                          
-<https://www.github.com/swanandx/lemmeknow>
-                                                          "#;
 
 fn main() {
     let args = Args::parse();
@@ -58,7 +49,6 @@ fn main() {
         let result_in_json = Identify::to_json(&result);
         println!("{result_in_json}");
     } else {
-        println!("{BANNER}");
         let printer = if args.verbose {
             PrintMode::Verbose
         } else {
