@@ -69,7 +69,9 @@ Pass `TEXT` or `/PATH/TO/FILE` as argument. If you want output in JSON format, t
 
 > Run `lemmeknow --help` for all options!
 
-![demo](images/demo.gif)
+<p align="center">
+  <img src="images/demo.gif" alt="demo" />
+</p>
 
 <br />
 
