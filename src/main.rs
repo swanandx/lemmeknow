@@ -18,10 +18,10 @@ struct Args {
     /// Only identify text, Do not scan file
     #[clap(short, long)]
     text_only: bool,
-    /// Disable boundaryless regex mode
+    /// Disable boundaryless mode, if you are getting lot of false positives
     #[clap(short, long)]
     boundary: bool,
-    /// Only include matches with these tags
+    /// Include matches with these tags
     #[clap(short, long, value_delimiter(','))]
     include: Option<Vec<String>>,
     /// Exclude matches having these tags
