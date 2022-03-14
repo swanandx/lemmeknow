@@ -93,11 +93,11 @@ fn pretty_print(result: &[Matches], output_format: PrintMode) {
         println!("\x1b[0;32mFound Possible Identifications :)\x1b[0m");
 
         result.iter().for_each(|item| {
-            let description = match (item.data.Description.as_ref(), item.data.URL.as_ref()) {
+            let description = match (&item.data.Description, &item.data.URL) {
                 (Some(des), Some(url)) => format!("{des}\n Check URL: {url}{}", &item.text),
-                (Some(des), None) => des.to_string(),
+                (Some(des), None) => des.to_owned(),
                 (None, Some(url)) => format!("URL:\n {url}{}", &item.text),
-                (None, None) => "None".to_string(),
+                (None, None) => "None".to_owned(),
             };
 
             let mut row = vec![

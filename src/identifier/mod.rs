@@ -130,13 +130,13 @@ impl Identify {
         let regexes = build_regexes(json_data);
         let mut all_matches = Vec::<Matches>::new();
 
-        for text in &strings {
-            for i in &regexes {
-                if i.compiled_regex.is_match(text).unwrap() {
-                    all_matches.push(Matches::new(text.to_string(), i.data.clone()));
+        strings.iter().for_each(|text| {
+            regexes.iter().for_each(|re| {
+                if re.compiled_regex.is_match(text).unwrap() {
+                    all_matches.push(Matches::new(text.to_owned(), re.data.clone()))
                 }
-            }
-        }
+            })
+        });
 
         all_matches
     }
