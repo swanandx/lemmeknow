@@ -2,7 +2,12 @@ use clap::Parser;
 use lemmeknow::{Identify, PrintMode};
 
 #[derive(Parser)]
-#[clap(author, version, about, long_about = "https://github.com/swanandx/lemmeknow")]
+#[clap(
+    author,
+    version,
+    about,
+    long_about = "https://github.com/swanandx/lemmeknow"
+)]
 struct Args {
     /// Text which you want to identify
     text: String,
@@ -31,7 +36,6 @@ struct Args {
     #[clap(short, long)]
     verbose: bool,
 }
-
 
 fn main() {
     let args = Args::parse();
