@@ -1,6 +1,8 @@
 //! For identifying text / analyzing files
 
 use fancy_regex::Regex;
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use std::sync::{Arc, Mutex};
 use std::{fs, str};
 
 use crate::Data;
@@ -62,6 +64,7 @@ impl Identify {
         self.boundaryless = boundaryless;
         self
     }
+
     pub fn file_support(mut self, support: bool) -> Identify {
         self.file_support = support;
         self
@@ -119,26 +122,33 @@ impl Identify {
 
         self.filter_json_data(&mut json_data);
 
-        let mut strings: Vec<String> = Vec::<String>::new();
+        let regexes = build_regexes(json_data);
+        let all_matches = Arc::new(Mutex::new(Vec::<Matches>::new()));
 
         if self.file_support && is_file(text) {
-            strings.extend(read_file_to_strings(text));
+            let strings = read_file_to_strings(text);
+            strings.par_iter().for_each(|text| {
+                regexes.par_iter().for_each(|re| {
+                    if re.compiled_regex.is_match(text).unwrap() {
+                        all_matches
+                            .lock()
+                            .unwrap()
+                            .push(Matches::new(text.to_owned(), re.data.clone()))
+                    }
+                })
+            });
         } else {
-            strings.push(text.to_string());
-        }
-
-        let regexes = build_regexes(json_data);
-        let mut all_matches = Vec::<Matches>::new();
-
-        strings.iter().for_each(|text| {
-            regexes.iter().for_each(|re| {
+            regexes.par_iter().for_each(|re| {
                 if re.compiled_regex.is_match(text).unwrap() {
-                    all_matches.push(Matches::new(text.to_owned(), re.data.clone()))
+                    all_matches
+                        .lock()
+                        .unwrap()
+                        .push(Matches::new(text.to_owned(), re.data.clone()))
                 }
             })
-        });
+        }
 
-        all_matches
+        Arc::try_unwrap(all_matches).unwrap().into_inner().unwrap()
     }
 }
 
