@@ -39,6 +39,7 @@ pub struct Identify {
 }
 
 // Filter implementation
+// TODO: check if #[inline] provides some perf improvement.
 impl Identify {
     pub fn min_rarity(mut self, rarity: f32) -> Self {
         self.min_rarity = Some(rarity);
@@ -153,6 +154,7 @@ impl Identify {
 }
 
 // Output Implementation
+// TODO: try #[inline]
 impl Identify {
     /// Convert [`Vec<Matches>`] to JSON
     ///
@@ -181,6 +183,7 @@ impl Identify {
 }
 
 // helper functions
+// TODO: try #[inline]
 fn is_file(name: &str) -> bool {
     fs::metadata(name).is_ok()
 }

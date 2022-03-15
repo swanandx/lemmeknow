@@ -44,6 +44,7 @@ pub mod output;
 #[cfg(feature = "cli")]
 pub use self::output::PrintMode;
 
+// TODO: Try not to use String
 /// structure for parsing data from JSON file.
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
