@@ -40,32 +40,32 @@ pub struct Identify {
 
 // Filter implementation
 impl Identify {
-    pub fn min_rarity(mut self, rarity: f32) -> Identify {
+    pub fn min_rarity(mut self, rarity: f32) -> Self {
         self.min_rarity = Some(rarity);
         self
     }
 
-    pub fn max_rarity(mut self, rarity: f32) -> Identify {
+    pub fn max_rarity(mut self, rarity: f32) -> Self {
         self.max_rarity = Some(rarity);
         self
     }
 
-    pub fn include_tags(mut self, tags: &[String]) -> Identify {
+    pub fn include_tags(mut self, tags: &[String]) -> Self {
         self.tags.extend_from_slice(tags);
         self
     }
 
-    pub fn exclude_tags(mut self, tags: &[String]) -> Identify {
+    pub fn exclude_tags(mut self, tags: &[String]) -> Self {
         self.exclude_tags.extend_from_slice(tags);
         self
     }
 
-    pub fn boundaryless(mut self, boundaryless: bool) -> Identify {
+    pub fn boundaryless(mut self, boundaryless: bool) -> Self {
         self.boundaryless = boundaryless;
         self
     }
 
-    pub fn file_support(mut self, support: bool) -> Identify {
+    pub fn file_support(mut self, support: bool) -> Self {
         self.file_support = support;
         self
     }
