@@ -185,7 +185,7 @@ impl Identify {
 // helper functions
 // TODO: try #[inline]
 fn is_file(name: &str) -> bool {
-    fs::metadata(name).is_ok()
+    fs::metadata(name).unwrap().is_file()
 }
 
 fn read_file_to_strings(filename: &str) -> Vec<String> {
