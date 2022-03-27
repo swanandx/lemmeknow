@@ -138,7 +138,7 @@ lemmeknow is around **33x faster** than pywhat for a file of 8.7MB, and it is **
 
 | A file of 8.7MB | A single string |
 | ---  |  ---   |
-| *Summary*: `lemmeknow.exe floss.exe` ran **33.13 ± 9.74** times faster than `what floss.exe` | *Summary*: `lemmeknow.exe 3FZ..Zc5` ran **3.29 ± 0.77** times faster than `pywhat 3FZ..Zc5` |
+| *Summary*: `lemmeknow.exe floss.exe` ran **33.13 ± 9.74** times faster than `pywhat floss.exe` | *Summary*: `lemmeknow.exe 3FZ..Zc5` ran **3.29 ± 0.77** times faster than `pywhat 3FZ..Zc5` |
 | ![File benchmark](images/bench_file.png)     | ![String benchmark](images/bench_string.png)       |
 
 > Thanks to [SkeletalDemise](https://github.com/SkeletalDemise) for the benchmarks and the whisker plots ✨
