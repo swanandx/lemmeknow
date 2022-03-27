@@ -116,7 +116,7 @@ Want to use this as a crate in your project? or make a web api for it? No worrie
 
 ```toml
 [dependencies]
-lemmeknow = "0.3.0"
+lemmeknow = { version = "0.4.0", default-features = false }
 
 ```
 
@@ -124,11 +124,24 @@ OR
 
 ```toml
 [dependencies]
-lemmeknow = { git = "https://github.com/swanandx/lemmeknow" }
+lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = false }
 
 ```
 
 > Refer to [documentation](https://docs.rs/lemmeknow) for more info.
+
+<br />
+
+## ⚔️ Benchmarks
+
+lemmeknow is around **33x faster** than pywhat for a file of 8.7MB, and it is **3x faster** for a single string!
+
+| A file of 8.7MB | A single string |
+| ---  |  ---   |
+| *Summary*: `lemmeknow.exe floss.exe` ran **33.13 ± 9.74** times faster than `what floss.exe` | *Summary*: `lemmeknow.exe 3FZ..Zc5` ran **3.29 ± 0.77** times faster than `pywhat 3FZ..Zc5` |
+| ![File benchmark](images/bench_file.png)     | ![String benchmark](images/bench_string.png)       |
+
+> Thanks to [SkeletalDemise](https://github.com/SkeletalDemise) for the benchmarks and the whisker plots ✨
 
 <br />
 
