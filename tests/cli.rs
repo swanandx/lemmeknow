@@ -17,7 +17,6 @@ fn identify_content_in_file() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-
 #[test]
 fn identify_url() -> Result<(), Box<dyn std::error::Error>> {
     let mut cmd = Command::cargo_bin("lemmeknow")?;
