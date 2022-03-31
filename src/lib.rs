@@ -9,7 +9,7 @@
  *
  * ```toml
  * [dependencies]
- * lemmeknow = { version = "0.4.0", default-features = false }
+ * lemmeknow = { version = "0.4.1", default-features = false }
  * ```
  *
  * OR by using github repositoy:
