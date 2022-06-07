@@ -11,6 +11,7 @@ license = "MIT"
 keywords = ["cryptography", "cybersecurity", "regex", "forensics", "identify"]
 categories = ["accessibility", "command-line-utilities", "text-processing", "parsing", "encoding"]
 documentation = "https://docs.rs/lemmeknow"
+exclude = ["images/", ".github/"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,7 +21,6 @@ path = "src/lib.rs"
 crate-type = ["lib"]
 
 [features]
-default = ["cli"]
 cli = ["comfy-table", "clap"]
 
 [[bin]]
@@ -29,11 +29,13 @@ path = "src/main.rs"
 required-features = ["cli"]
 
 [dependencies]
-fancy-regex = "0.8.0"
+fancy-regex = "0.10.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 rayon = "1.5.1"
-comfy-table = { version = "5.0.1", optional = true }
+comfy-table = { version = "6.0.0", optional = true }
 clap = { version = "3.1.6", features = ["derive"], optional = true }
 
 [dev-dependencies]

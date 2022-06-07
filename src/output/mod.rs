@@ -1,5 +1,5 @@
 /*!
- * For pretty printing the output to termial.
+ * For pretty printing the output to terminal.
  *
  * > This requires `cli` feature to be enabled. (enabled by default)
  *

@@ -1,9 +1,13 @@
 //! For identifying text / analyzing files
 
 use fancy_regex::Regex;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-use std::sync::{Arc, Mutex};
-use std::{fs, str};
+
+#[cfg(not(target_arch = "wasm32"))]
+use {
+    rayon::iter::{IntoParallelRefIterator, ParallelIterator},
+    std::sync::{Arc, Mutex},
+    std::{fs, str},
+};
 
 use crate::Data;
 use crate::Matches;
@@ -24,9 +28,9 @@ impl RegexData {
 
 #[derive(Default)]
 pub struct Identify {
-    /// Keep Data having minimun Rarity of supplied `min_rarity`
+    /// Keep Data having minimum Rarity of supplied `min_rarity`
     pub min_rarity: Option<f32>,
-    /// Keep Data having maximun Rarity of supplied `max_rarity`
+    /// Keep Data having maximum Rarity of supplied `max_rarity`
     pub max_rarity: Option<f32>,
     /// Only include the Data which have at least one of the specified `tags`
     pub tags: Vec<String>,
@@ -101,6 +105,7 @@ impl Identify {
 }
 
 // Identifier implementation
+#[cfg(not(target_arch = "wasm32"))]
 impl Identify {
     /// Identify the given text.
     ///
@@ -118,6 +123,7 @@ impl Identify {
     /// assert_eq!(result[0].data.Name, "YouTube Channel ID");
     /// ```
     ///
+
     pub fn identify(&self, text: &str) -> Vec<Matches> {
         let mut json_data: Vec<Data> = load_regexes();
 
@@ -153,6 +159,31 @@ impl Identify {
     }
 }
 
+// Identifier implementation for wasm
+#[cfg(target_arch = "wasm32")]
+impl Identify {
+    // There is no file system on the web, so we are not reading strings from file.
+    // let the user perform the I/O and read the file, then pass the content of it.
+    pub fn identify(&self, text: &[String]) -> Vec<Matches> {
+        let mut json_data: Vec<Data> = load_regexes();
+
+        self.filter_json_data(&mut json_data);
+
+        let regexes = build_regexes(json_data);
+        let mut all_matches = Vec::<Matches>::new();
+
+        text.iter().for_each(|text| {
+            regexes.iter().for_each(|re| {
+                if re.compiled_regex.is_match(text).unwrap() {
+                    all_matches.push(Matches::new(text.to_owned(), re.data.clone()))
+                }
+            })
+        });
+
+        all_matches
+    }
+}
+
 // Output Implementation
 // TODO: try #[inline]
 impl Identify {
@@ -184,6 +215,7 @@ impl Identify {
 
 // helper functions
 // TODO: try #[inline]
+#[cfg(not(target_arch = "wasm32"))]
 fn is_file(name: &str) -> bool {
     if let Ok(s) = fs::metadata(name) {
         s.is_file()
@@ -192,6 +224,7 @@ fn is_file(name: &str) -> bool {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn read_file_to_strings(filename: &str) -> Vec<String> {
     let file = fs::read(filename).expect("File not found");
 
@@ -206,7 +239,7 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
             use_current_buffer = true;
             buffer.push(character);
         } else if use_current_buffer {
-            // If the char isn't ascii graphic, that means this is the end for our string which we are intresed in
+            // If the char isn't ascii graphic, that means this is the end for our string which we are interested in
             // string with length less than 4 most likely won't be of our use.
             // If it has length more than 4, then push it to our `printable_text`
             if buffer.len() >= 4 {

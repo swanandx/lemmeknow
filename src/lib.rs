@@ -12,7 +12,7 @@
  * lemmeknow = { version = "0.4.1", default-features = false }
  * ```
  *
- * OR by using github repositoy:
+ * OR by using github repository:
  *
  * ```toml
  * [dependencies]
@@ -38,9 +38,11 @@ pub use self::identifier::Identify;
 
 use serde::{Deserialize, Serialize};
 
+#[cfg(not(target_arch = "wasm32"))]
 #[cfg(feature = "cli")]
 pub mod output;
 
+#[cfg(not(target_arch = "wasm32"))]
 #[cfg(feature = "cli")]
 pub use self::output::PrintMode;
 
