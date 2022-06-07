@@ -38,7 +38,7 @@ jobs:
       - uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: -- -D warnings
+          args: -- -D warnings --all-features
 
   test:
     name: Cargo test on ${{ matrix.os }}
@@ -62,6 +62,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
+          args: --all-features
 
   coverage:
     name: Code coverage
