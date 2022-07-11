@@ -38,7 +38,7 @@ jobs:
       - uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --all-targets -- -D warnings
+          args: --all-targets -- -D warnings
 
   test:
     name: Cargo test on ${{ matrix.os }}
@@ -62,7 +62,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all-features --all-targets
+          args: --all-targets
 
   coverage:
     name: Code coverage
@@ -80,4 +80,4 @@ jobs:
       - name: Run cargo-tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
-          args: '--ignore-tests --all-features'
+          args: '--ignore-tests'

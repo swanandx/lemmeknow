@@ -21,6 +21,7 @@ path = "src/lib.rs"
 crate-type = ["lib"]
 
 [features]
+default = ["cli"]
 cli = ["comfy-table", "clap"]
 
 [[bin]]
