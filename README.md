@@ -116,7 +116,7 @@ Want to use this as a crate in your project? or make a web api for it? No worrie
 
 ```toml
 [dependencies]
-lemmeknow = { version = "0.4.1", default-features = false }
+lemmeknow = { version = "0.5", default-features = false }
 
 ```
 
@@ -129,6 +129,8 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = 
 ```
 
 > Refer to [documentation](https://docs.rs/lemmeknow) for more info.
+
+lemmeknow supports webassembly, that is, it can be compiled for `wasm32-unknown-unknown` target!
 
 <br />
 
