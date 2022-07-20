@@ -6,7 +6,7 @@
   ⚡ 🦀 🔍
 </div>
 <div align="center">
-  <strong>Just ask `lemmeknow`!</strong>
+  <strong>Just ask "lemmeknow"!</strong>
 </div>
 <div align="center">
   The fastest way to identify anything
@@ -55,6 +55,13 @@
 <!-- Thnx to choo for above README design <3 https://github.com/choojs/choo/blob/master/README.md -->
 
 `lemmeknow` can be used for identifying mysterious text or to analyze hard-coded strings from captured network packets, malwares, or just about anything.
+
+
+<div align="center">
+  <strong>Try it online 
+  <a href="https://swanandx.github.io/lemmeknow-frontend/">here</a>
+  </strong>
+</div>
 
 <br />
 
@@ -131,6 +138,7 @@ lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = 
 > Refer to [documentation](https://docs.rs/lemmeknow) for more info.
 
 lemmeknow supports webassembly, that is, it can be compiled for `wasm32-unknown-unknown` target!
+e.g. [lemmeknow-frontend](https://github.com/swanandx/lemmeknow-frontend)
 
 <br />
 
