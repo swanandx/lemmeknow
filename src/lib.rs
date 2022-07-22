@@ -48,28 +48,33 @@ pub use self::output::PrintMode;
 
 // TODO: Try not to use String
 /// structure for parsing data from JSON file.
-#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Data {
-    pub Name: String,
-    pub Regex: String,
+    #[serde(rename = "Name")]
+    pub name: String,
+    #[serde(rename = "Regex")]
+    pub regex: String,
     pub plural_name: bool,
-    pub Description: Option<String>,
-    pub Rarity: f32,
-    pub URL: Option<String>,
-    pub Tags: Vec<String>,
+    #[serde(rename = "Description")]
+    pub description: Option<String>,
+    #[serde(rename = "Rarity")]
+    pub rarity: f32,
+    #[serde(rename = "URL")]
+    pub url: Option<String>,
+    #[serde(rename = "Tags")]
+    pub tags: Vec<String>,
 }
 
 /// structure containing the text and it's possible identification.
 #[derive(Serialize, Debug)]
-pub struct Matches {
+pub struct Match {
     pub text: String,
     pub data: Data,
 }
 
-impl Matches {
-    pub fn new(text: String, data: Data) -> Matches {
-        Matches { text, data }
+impl Match {
+    pub fn new(text: String, data: Data) -> Match {
+        Match { text, data }
     }
 }
 

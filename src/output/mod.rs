@@ -16,7 +16,7 @@
  * ```
 */
 
-use crate::Matches;
+use crate::Match;
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
 
@@ -28,7 +28,7 @@ pub enum PrintMode {
 }
 
 impl PrintMode {
-    /// Print [`Vec<Matches>`] in a tabular form.
+    /// Print [`Vec<Match>`] in a tabular form.
     ///
     /// Use this if you want to print the possible identification in terminal
     /// with a pretty table.
@@ -38,7 +38,7 @@ impl PrintMode {
     ///
     /// # Arguments
     ///
-    /// * result: `&Matches` - Reference to [`Vec<Matches>`].
+    /// * result: `&Match` - Reference to [`Vec<Match>`].
     ///
     /// # Examples
     ///
@@ -51,12 +51,12 @@ impl PrintMode {
     /// printer.print(&result);
     /// ```
     ///
-    pub fn print(self, result: &[Matches]) {
+    pub fn print(self, result: &[Match]) {
         pretty_print(result, self)
     }
 }
 
-fn pretty_print(result: &[Matches], output_format: PrintMode) {
+fn pretty_print(result: &[Match], output_format: PrintMode) {
     let mut table = Table::new();
     let mut headers = vec![
         Cell::new("Matched text")
@@ -93,7 +93,7 @@ fn pretty_print(result: &[Matches], output_format: PrintMode) {
         println!("\x1b[0;32mFound Possible Identifications :)\x1b[0m");
 
         result.iter().for_each(|item| {
-            let description = match (&item.data.Description, &item.data.URL) {
+            let description = match (&item.data.description, &item.data.url) {
                 (Some(des), Some(url)) => format!("{des}\n Check URL: {url}{}", &item.text),
                 (Some(des), None) => des.to_owned(),
                 (None, Some(url)) => format!("URL:\n {url}{}", &item.text),
@@ -102,14 +102,14 @@ fn pretty_print(result: &[Matches], output_format: PrintMode) {
 
             let mut row = vec![
                 Cell::new(&item.text),
-                Cell::new(&item.data.Name),
+                Cell::new(&item.data.name),
                 Cell::new(description),
             ];
 
             if let PrintMode::Verbose = output_format {
                 row.extend([
-                    Cell::new(&item.data.Rarity),
-                    Cell::new(&item.data.Tags.join(", ")),
+                    Cell::new(&item.data.rarity),
+                    Cell::new(&item.data.tags.join(", ")),
                 ]);
             }
 

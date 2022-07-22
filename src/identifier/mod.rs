@@ -10,7 +10,7 @@ use {
 };
 
 use crate::Data;
-use crate::Matches;
+use crate::Match;
 
 struct RegexData {
     compiled_regex: Regex,
@@ -78,28 +78,28 @@ impl Identify {
     fn filter_json_data(&self, json_data: &mut Vec<Data>) {
         if self.boundaryless {
             for data in json_data.iter_mut() {
-                data.Regex = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
+                data.regex = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
                     .unwrap()
-                    .replace(&data.Regex, "")
+                    .replace(&data.regex, "")
                     .to_string();
-                data.Regex = Regex::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
+                data.regex = Regex::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
                     .unwrap()
-                    .replace(&data.Regex, "")
+                    .replace(&data.regex, "")
                     .to_string();
             }
         }
 
         if let Some(min_rarity) = self.min_rarity {
-            json_data.retain(|x| x.Rarity >= min_rarity)
+            json_data.retain(|x| x.rarity >= min_rarity)
         }
         if let Some(max_rarity) = self.max_rarity {
-            json_data.retain(|x| x.Rarity <= max_rarity)
+            json_data.retain(|x| x.rarity <= max_rarity)
         }
         if !self.tags.is_empty() {
-            json_data.retain(|x| self.tags.iter().any(|y| x.Tags.contains(y)))
+            json_data.retain(|x| self.tags.iter().any(|y| x.tags.contains(y)))
         }
         if !self.exclude_tags.is_empty() {
-            json_data.retain(|x| self.exclude_tags.iter().any(|y| !x.Tags.contains(y)))
+            json_data.retain(|x| self.exclude_tags.iter().any(|y| !x.tags.contains(y)))
         }
     }
 }
@@ -111,6 +111,8 @@ impl Identify {
     ///
     /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
     ///
+    /// Finds all possible identifications.
+    ///
     /// # Arguments
     ///
     /// * text: &str - text which we want to identify
@@ -120,19 +122,19 @@ impl Identify {
     /// ```
     /// let identifier = lemmeknow::Identify::default();
     /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
-    /// assert_eq!(result[0].data.Name, "YouTube Channel ID");
+    /// assert_eq!(result[0].data.name, "YouTube Channel ID");
     /// ```
     ///
 
-    pub fn identify(&self, text: &str) -> Vec<Matches> {
-        let mut json_data: Vec<Data> = load_regexes();
+    pub fn identify(&self, text: &str) -> Vec<Match> {
+        let mut json_data: Vec<Data> = load_data();
 
         self.filter_json_data(&mut json_data);
 
         let regexes = build_regexes(json_data);
-        let all_matches = Arc::new(Mutex::new(Vec::<Matches>::new()));
 
         if self.file_support && is_file(text) {
+            let all_matches = Arc::new(Mutex::new(Vec::<Match>::new()));
             let strings = read_file_to_strings(text);
             strings.par_iter().for_each(|text| {
                 regexes.par_iter().for_each(|re| {
@@ -140,22 +142,57 @@ impl Identify {
                         all_matches
                             .lock()
                             .unwrap()
-                            .push(Matches::new(text.to_owned(), re.data.clone()))
+                            .push(Match::new(text.to_owned(), re.data.clone()))
                     }
                 })
             });
+            Arc::try_unwrap(all_matches).unwrap().into_inner().unwrap()
         } else {
-            regexes.par_iter().for_each(|re| {
+            // iter has almost same or sometimes better performance than par_iter for single text!
+            let mut all_matches = Vec::<Match>::new();
+            regexes.iter().for_each(|re| {
                 if re.compiled_regex.is_match(text).unwrap() {
-                    all_matches
-                        .lock()
-                        .unwrap()
-                        .push(Matches::new(text.to_owned(), re.data.clone()))
+                    all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                 }
-            })
+            });
+            all_matches
+        }
+    }
+
+    /// This returns the first identification.
+    ///
+    /// Due to how data is stored, this means that the returned result has the highest `rarity`.
+    ///
+    /// # Arguments
+    ///
+    /// * text: &str - text which we want to identify
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let identifier = lemmeknow::Identify::default();
+    /// let some_result = identifier.first_match("8888888888");
+    /// let not_gonna_find = identifier.first_match("sjfjsafjlsj");
+    ///  
+    /// assert_eq!(some_result.unwrap().data.name, "Phone Number");
+    /// assert!(not_gonna_find.is_none());
+    /// ```
+    ///
+    pub fn first_match(&self, text: &str) -> Option<Match> {
+        let mut json_data: Vec<Data> = load_data();
+
+        self.filter_json_data(&mut json_data);
+
+        for data in json_data {
+            // only consider the regex which compiles!
+            if let Ok(re) = Regex::new(&data.regex) {
+                if re.is_match(text).unwrap() {
+                    return Some(Match::new(text.to_owned(), data));
+                }
+            }
         }
 
-        Arc::try_unwrap(all_matches).unwrap().into_inner().unwrap()
+        None
     }
 }
 
@@ -164,18 +201,18 @@ impl Identify {
 impl Identify {
     // There is no file system on the web, so we are not reading strings from file.
     // let the user perform the I/O and read the file, then pass the content of it.
-    pub fn identify(&self, text: &[String]) -> Vec<Matches> {
+    pub fn identify(&self, text: &[String]) -> Vec<Match> {
         let mut json_data: Vec<Data> = load_regexes();
 
         self.filter_json_data(&mut json_data);
 
         let regexes = build_regexes(json_data);
-        let mut all_matches = Vec::<Matches>::new();
+        let mut all_matches = Vec::<Match>::new();
 
         text.iter().for_each(|text| {
             regexes.iter().for_each(|re| {
                 if re.compiled_regex.is_match(text).unwrap() {
-                    all_matches.push(Matches::new(text.to_owned(), re.data.clone()))
+                    all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                 }
             })
         });
@@ -187,7 +224,7 @@ impl Identify {
 // Output Implementation
 // TODO: try #[inline]
 impl Identify {
-    /// Convert [`Vec<Matches>`] to JSON
+    /// Convert [`Vec<Match>`] to JSON
     ///
     /// Returns prettified JSON string.
     ///
@@ -196,7 +233,7 @@ impl Identify {
     ///
     /// # Arguments
     ///
-    /// * result: &[Matches] - Reference to `Vec<Matches>`.
+    /// * result: &[Match] - Reference to `Vec<Match>`.
     ///
     /// # Examples
     ///
@@ -208,7 +245,7 @@ impl Identify {
     /// println!("{result_in_json}");
     /// ```
     ///
-    pub fn to_json(result: &[Matches]) -> String {
+    pub fn to_json(result: &[Match]) -> String {
         serde_json::to_string_pretty(result).unwrap_or_default()
     }
 }
@@ -258,11 +295,11 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
     printable_text
 }
 
-fn load_regexes() -> Vec<Data> {
+fn load_data() -> Vec<Data> {
     // include_str! will include the data in binary
     // so we don't have to keep track of JSON file all the time after compiling the binary
-    let data = include_str!("../data/regex.json");
-    serde_json::from_str::<Vec<Data>>(data).expect("Failed to parse JSON")
+    const DATA: &str = include_str!("../data/regex.json");
+    serde_json::from_str::<Vec<Data>>(DATA).expect("Failed to parse JSON")
 }
 
 fn build_regexes(loaded_data: Vec<Data>) -> Vec<RegexData> {
@@ -270,7 +307,7 @@ fn build_regexes(loaded_data: Vec<Data>) -> Vec<RegexData> {
     for data in loaded_data {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.
-        if let Ok(result) = Regex::new(&data.Regex) {
+        if let Ok(result) = Regex::new(&data.regex) {
             regexes.push(RegexData::new(result, data))
         } else {
             panic!("Can't compile {data:#?}");
