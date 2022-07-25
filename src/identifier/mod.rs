@@ -138,7 +138,7 @@ impl Identify {
             let strings = read_file_to_strings(text);
             strings.par_iter().for_each(|text| {
                 regexes.par_iter().for_each(|re| {
-                    if re.compiled_regex.is_match(text).unwrap() {
+                    if let Ok(true) = re.compiled_regex.is_match(text) {
                         all_matches
                             .lock()
                             .unwrap()
@@ -151,7 +151,7 @@ impl Identify {
             // iter has almost same or sometimes better performance than par_iter for single text!
             let mut all_matches = Vec::<Match>::new();
             regexes.iter().for_each(|re| {
-                if re.compiled_regex.is_match(text).unwrap() {
+                if let Ok(true) = re.compiled_regex.is_match(text) {
                     all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                 }
             });
