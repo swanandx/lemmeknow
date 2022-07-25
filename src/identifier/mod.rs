@@ -280,7 +280,9 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
             // string with length less than 4 most likely won't be of our use.
             // If it has length more than 4, then push it to our `printable_text`
             if buffer.len() >= 4 {
-                printable_text.push(String::from_utf8(buffer.clone()).expect("failed to convert u8 to string"));
+                printable_text.push(
+                    String::from_utf8(buffer.clone()).expect("failed to convert u8 to string"),
+                );
             }
 
             // Clear the buffer so that current contents of it won't affect the next string.
