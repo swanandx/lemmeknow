@@ -79,11 +79,11 @@ impl Identify {
         if self.boundaryless {
             for data in json_data.iter_mut() {
                 data.regex = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
-                    .unwrap()
+                    .expect("can't compile for boundaryless")
                     .replace(&data.regex, "")
                     .to_string();
                 data.regex = Regex::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
-                    .unwrap()
+                    .expect("can't compile for boundaryless")
                     .replace(&data.regex, "")
                     .to_string();
             }
@@ -186,7 +186,7 @@ impl Identify {
         for data in json_data {
             // only consider the regex which compiles!
             if let Ok(re) = Regex::new(&data.regex) {
-                if re.is_match(text).unwrap() {
+                if let Ok(true) = re.is_match(text) {
                     return Some(Match::new(text.to_owned(), data));
                 }
             }
@@ -211,7 +211,7 @@ impl Identify {
 
         text.iter().for_each(|text| {
             regexes.iter().for_each(|re| {
-                if re.compiled_regex.is_match(text).unwrap() {
+                if let Ok(true) = re.compiled_regex.is_match(text) {
                     all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                 }
             })
@@ -280,7 +280,7 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
             // string with length less than 4 most likely won't be of our use.
             // If it has length more than 4, then push it to our `printable_text`
             if buffer.len() >= 4 {
-                printable_text.push(String::from_utf8(buffer.clone()).unwrap());
+                printable_text.push(String::from_utf8(buffer.clone()).expect("failed to convert u8 to string"));
             }
 
             // Clear the buffer so that current contents of it won't affect the next string.
@@ -290,7 +290,7 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
         }
     }
 
-    printable_text.push(String::from_utf8(buffer).unwrap());
+    printable_text.push(String::from_utf8(buffer).expect("failed to convert u8 to string"));
 
     printable_text
 }
