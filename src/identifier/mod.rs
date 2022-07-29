@@ -150,7 +150,6 @@ impl Identifier {
                 .iter()
                 .filter(|x| is_valid_filter(self, x))
                 .for_each(|re| {
-                    println!("matched {:?}", re.data.name);
                     if let Ok(true) = re.compiled_regex.is_match(text) {
                         all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                     }
