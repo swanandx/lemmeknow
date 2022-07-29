@@ -24,17 +24,17 @@
  * Let us say we want to identify a text and then get the output as pretty JSON
  *
  * ```rust
- * use lemmeknow::Identify;
- * let identifier = Identify::default();
+ * use lemmeknow::Identifier;
+ * let identifier = Identifier::default();
  * let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
- * let result_in_json = Identify::to_json(&result);
+ * let result_in_json = Identifier::to_json(&result);
  * println!("{result_in_json}");
  * ```
  *
  * */
 
 pub mod identifier;
-pub use self::identifier::Identify;
+pub use self::identifier::Identifier;
 
 use serde::{Deserialize, Serialize};
 

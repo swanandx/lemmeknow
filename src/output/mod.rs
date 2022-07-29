@@ -8,8 +8,8 @@
  * Print results in a beautiful table!
  *
  * ```rust
- * use lemmeknow::{Identify, PrintMode};
- * let identifier = Identify::default();
+ * use lemmeknow::{Identifier, PrintMode};
+ * let identifier = Identifier::default();
  * let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
  * let printer = PrintMode::Normal;
  * printer.print(&result);
@@ -43,8 +43,8 @@ impl PrintMode {
     /// # Examples
     ///
     /// ```
-    /// use lemmeknow::{Identify, PrintMode};
-    /// let identifier = Identify::default();
+    /// use lemmeknow::{Identifier, PrintMode};
+    /// let identifier = Identifier::default();
     /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
     /// let printer = PrintMode::Verbose;
     ///

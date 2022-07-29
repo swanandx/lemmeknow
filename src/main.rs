@@ -1,5 +1,5 @@
 use clap::Parser;
-use lemmeknow::{Identify, PrintMode};
+use lemmeknow::{Identifier, PrintMode};
 
 #[derive(Parser)]
 #[clap(
@@ -40,7 +40,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let identifier = Identify::default()
+    let identifier = Identifier::default()
         .min_rarity(args.min_rarity)
         .max_rarity(args.max_rarity)
         .include_tags(&args.include.unwrap_or_default())
@@ -50,7 +50,7 @@ fn main() {
 
     let result = identifier.identify(&args.text);
     if args.json {
-        let result_in_json = Identify::to_json(&result);
+        let result_in_json = Identifier::to_json(&result);
         println!("{result_in_json}");
     } else {
         let printer = if args.verbose {
