@@ -49,4 +49,3 @@ predicates = "2.1"
 lto = "fat"
 panic = "abort"
 strip = "symbols"
-codegen-units = 1
