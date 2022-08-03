@@ -7,8 +7,8 @@ use {
     std::{fs, str},
 };
 
-use fancy_regex::Regex;
 use once_cell::sync::Lazy;
+use regex::Regex;
 
 use crate::Data;
 use crate::Match;
@@ -134,7 +134,7 @@ impl Identifier {
                     .par_iter()
                     .filter(|x| is_valid_filter(self, x))
                     .for_each(|re| {
-                        if let Ok(true) = re.compiled_regex.is_match(text) {
+                        if re.compiled_regex.is_match(text) {
                             all_matches
                                 .lock()
                                 .unwrap()
@@ -150,7 +150,7 @@ impl Identifier {
                 .iter()
                 .filter(|x| is_valid_filter(self, x))
                 .for_each(|re| {
-                    if let Ok(true) = re.compiled_regex.is_match(text) {
+                    if re.compiled_regex.is_match(text) {
                         all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                     }
                 });
@@ -186,7 +186,7 @@ impl Identifier {
 
         for re in regexes.iter().filter(|x| is_valid_filter(self, x)) {
             // only consider the regex which compiles!
-            if let Ok(true) = re.compiled_regex.is_match(text) {
+            if re.compiled_regex.is_match(text) {
                 return Some(Match::new(text.to_owned(), re.data.clone()));
             }
         }
@@ -312,10 +312,11 @@ fn build_regexes() -> Vec<RegexData> {
     for data in DATA.iter() {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.
-        if let Ok(result) = Regex::new(&data.regex) {
+        let result = Regex::new(&data.regex);
+        if let Ok(result) = result {
             regexes.push(RegexData::new(result, data.to_owned()))
         } else {
-            panic!("Can't compile {data:#?}");
+            println!("Data: {}\n{result:#?}", data.name);
         }
     }
     regexes
