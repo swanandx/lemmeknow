@@ -13,9 +13,11 @@ use regex::Regex;
 use crate::Data;
 use crate::Match;
 
-static DATA: Lazy<Vec<Data>> = Lazy::new(load_data);
 static REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_regexes);
 static BOUNDARYLESS_REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_boundaryless_regexes);
+
+// this is DATA
+include!(concat!(env!("OUT_DIR"), "/regex_data.rs"));
 
 struct RegexData {
     compiled_regex: Regex,
@@ -299,24 +301,15 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
     printable_text
 }
 
-fn load_data() -> Vec<Data> {
-    // include_str! will include the data in binary
-    // so we don't have to keep track of JSON file all the time after compiling the binary
-    const DATA: &str = include_str!("../data/regex.json");
-    serde_json::from_str::<Vec<Data>>(DATA).expect("Failed to parse JSON")
-}
-
 fn build_regexes() -> Vec<RegexData> {
     let mut regexes: Vec<RegexData> = Vec::new();
 
     for data in DATA.iter() {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.
-        let result = Regex::new(&data.regex);
+        let result = Regex::new(data.regex); //call .unwrap() here if you want to see which regexes fail
         if let Ok(result) = result {
             regexes.push(RegexData::new(result, data.to_owned()))
-        } else {
-            println!("Data: {}\n{result:#?}", data.name);
         }
     }
     regexes
@@ -325,21 +318,12 @@ fn build_regexes() -> Vec<RegexData> {
 fn build_boundaryless_regexes() -> Vec<RegexData> {
     let mut regexes: Vec<RegexData> = Vec::new();
 
-    for mut data in DATA.iter().cloned() {
-        data.regex = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
-            .expect("can't compile for boundaryless")
-            .replace(&data.regex, "")
-            .to_string();
-        data.regex = Regex::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
-            .expect("can't compile for boundaryless")
-            .replace(&data.regex, "")
-            .to_string();
+    for data in DATA.iter() {
         // Some regex from pywhat's regex.json might not work with fancy_regex
         // So we are just considering the ones which are valid.
-        if let Ok(result) = Regex::new(&data.regex) {
-            regexes.push(RegexData::new(result, data))
-        } else {
-            panic!("Can't compile {data:#?}");
+        let result = Regex::new(data.boundaryless); //call .unwrap() here if you want to see which regexes fail
+        if let Ok(result) = result {
+            regexes.push(RegexData::new(result, data.to_owned()))
         }
     }
     regexes
@@ -356,14 +340,14 @@ fn is_valid_filter(configs: &Identifier, regex_data: &RegexData) -> bool {
     if configs
         .tags
         .iter()
-        .any(|y| !regex_data.data.tags.contains(y))
+        .any(|y| !regex_data.data.tags.iter().any(|x| x == y))
     {
         return false;
     }
     if configs
         .exclude_tags
         .iter()
-        .any(|y| regex_data.data.tags.contains(y))
+        .any(|y| regex_data.data.tags.iter().any(|x| x == y))
     {
         return false;
     }

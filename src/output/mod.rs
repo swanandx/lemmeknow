@@ -95,7 +95,7 @@ fn pretty_print(result: &[Match], output_format: PrintMode) {
         result.iter().for_each(|item| {
             let description = match (&item.data.description, &item.data.url) {
                 (Some(des), Some(url)) => format!("{des}\n Check URL: {url}{}", &item.text),
-                (Some(des), None) => des.to_owned(),
+                (Some(des), None) => des.to_string(),
                 (None, Some(url)) => format!("URL:\n {url}{}", &item.text),
                 (None, None) => "None".to_owned(),
             };

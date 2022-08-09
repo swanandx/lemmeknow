@@ -36,7 +36,7 @@
 pub mod identifier;
 pub use self::identifier::Identifier;
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[cfg(not(target_arch = "wasm32"))]
 #[cfg(feature = "cli")]
@@ -48,21 +48,16 @@ pub use self::output::PrintMode;
 
 // TODO: Try not to use String
 /// structure for parsing data from JSON file.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Data {
-    #[serde(rename = "Name")]
-    pub name: String,
-    #[serde(rename = "Regex")]
-    pub regex: String,
+    pub name: &'static str,
+    pub regex: &'static str,
+    boundaryless: &'static str,
     pub plural_name: bool,
-    #[serde(rename = "Description")]
-    pub description: Option<String>,
-    #[serde(rename = "Rarity")]
+    pub description: Option<&'static str>,
     pub rarity: f32,
-    #[serde(rename = "URL")]
-    pub url: Option<String>,
-    #[serde(rename = "Tags")]
-    pub tags: Vec<String>,
+    pub url: Option<&'static str>,
+    pub tags: &'static [&'static str],
 }
 
 /// structure containing the text and it's possible identification.
