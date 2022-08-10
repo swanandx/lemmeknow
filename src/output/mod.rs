@@ -16,9 +16,10 @@
  * ```
 */
 
-use crate::Match;
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
+
+use crate::identifier::Match;
 
 /// Modes defining how the output shall be printed
 /// > Requires `cli` feature

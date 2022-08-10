@@ -60,18 +60,8 @@ pub struct Data {
     pub tags: &'static [&'static str],
 }
 
-/// structure containing the text and it's possible identification.
-#[derive(Serialize, Debug)]
-pub struct Match {
-    pub text: String,
-    pub data: Data,
-}
-
-impl Match {
-    pub fn new(text: String, data: Data) -> Match {
-        Match { text, data }
-    }
-}
+// this is DATA
+include!(concat!(env!("OUT_DIR"), "/regex_data.rs"));
 
 #[cfg(test)]
 mod tests {
