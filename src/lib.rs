@@ -36,6 +36,7 @@
 pub mod identifier;
 pub use self::identifier::bytes;
 pub use self::identifier::Identifier;
+pub use self::identifier::Match;
 
 use serde::Serialize;
 
