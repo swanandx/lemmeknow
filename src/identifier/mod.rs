@@ -30,7 +30,6 @@ impl RegexData {
     }
 }
 
-
 static REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_regexes);
 static BOUNDARYLESS_REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_boundaryless_regexes);
 
@@ -207,6 +206,34 @@ impl Identifier {
         }
 
         None
+    }
+}
+
+// Identifier implementation for wasm
+#[cfg(target_arch = "wasm32")]
+impl Identifier {
+    // There is no file system on the web, so we are not reading strings from file.
+    // let the user perform the I/O and read the file, then pass the content of it.
+    pub fn identify(&self, text: &[String]) -> Vec<Match> {
+        let regexes = if self.boundaryless {
+            &BOUNDARYLESS_REGEX_DATA
+        } else {
+            &REGEX_DATA
+        };
+        let mut all_matches = Vec::<Match>::new();
+
+        text.iter().for_each(|text| {
+            regexes
+                .iter()
+                .filter(|x| is_valid_filter(self, x))
+                .for_each(|re| {
+                    if re.compiled_regex.is_match(text) {
+                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
+                    }
+                })
+        });
+
+        all_matches
     }
 }
 

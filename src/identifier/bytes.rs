@@ -1,3 +1,5 @@
+//! For identifying bytes
+
 use once_cell::sync::Lazy;
 use regex::bytes::Regex;
 use serde::Serialize;
@@ -74,7 +76,7 @@ impl Default for Identifier {
     }
 }
 
-/// structure containing the text and it's possible identification.
+/// structure containing the bytes and it's possible identification.
 #[derive(Serialize, Debug)]
 pub struct Match {
     pub text: Vec<u8>,
@@ -103,15 +105,13 @@ impl RegexData {
 
 #[cfg(not(target_arch = "wasm32"))]
 impl Identifier {
-    /// Identify the given text.
-    ///
-    /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
+    /// Identify the given bytes.
     ///
     /// Finds all possible identifications.
     ///
     /// # Arguments
     ///
-    /// * text: &str - text which we want to identify
+    /// * text: &[u8] - text which we want to identify
     ///
     /// # Examples
     ///
@@ -147,7 +147,7 @@ impl Identifier {
     ///
     /// # Arguments
     ///
-    /// * text: &str - text which we want to identify
+    /// * text: &[u8] - text which we want to identify
     ///
     /// # Examples
     ///
@@ -183,7 +183,7 @@ impl Identifier {
 impl Identifier {
     // There is no file system on the web, so we are not reading strings from file.
     // let the user perform the I/O and read the file, then pass the content of it.
-    pub fn identify(&self, text: &[String]) -> Vec<Match> {
+    pub fn identify(&self, text: &[Vec<u8>]) -> Vec<Match> {
         let regexes = if self.boundaryless {
             &BOUNDARYLESS_REGEX_DATA
         } else {
@@ -196,7 +196,7 @@ impl Identifier {
                 .iter()
                 .filter(|x| is_valid_filter(self, x))
                 .for_each(|re| {
-                    if let Ok(true) = re.compiled_regex.is_match(text) {
+                    if re.compiled_regex.is_match(text) {
                         all_matches.push(Match::new(text.to_owned(), re.data.clone()))
                     }
                 })
