@@ -1,5 +1,3 @@
-use lemmeknow;
-
 #[test]
 fn identify_works() {
     let identifier = lemmeknow::Identifier::default();
