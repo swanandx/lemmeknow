@@ -116,8 +116,9 @@ impl Identifier {
     /// # Examples
     ///
     /// ```
-    /// let identifier = lemmeknow::Identifier::default();
-    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// let identifier = lemmeknow::bytes::Identifier::default();
+    /// let text = b"UC11L3JDgDQMyH8iolKkVZ4w";
+    /// let result = identifier.identify(text);
     /// assert_eq!(result[0].data.name, "YouTube Channel ID");
     /// ```
     ///
@@ -152,9 +153,9 @@ impl Identifier {
     /// # Examples
     ///
     /// ```
-    /// let identifier = lemmeknow::Identifier::default();
-    /// let some_result = identifier.first_match("8888888888");
-    /// let not_gonna_find = identifier.first_match("a friend for swanandx");
+    /// let identifier = lemmeknow::bytes::Identifier::default();
+    /// let some_result = identifier.first_match(b"8888888888");
+    /// let not_gonna_find = identifier.first_match(b"a friend for swanandx");
     ///  
     /// assert_eq!(some_result.unwrap().data.name, "Phone Number");
     /// assert!(not_gonna_find.is_none());
