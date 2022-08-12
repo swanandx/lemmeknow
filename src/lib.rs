@@ -19,7 +19,7 @@
  * lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = false }
  * ```
  *
- * # Example: To identify a text
+ * # Example:
  *
  * Let us say we want to identify a text and then get the output as pretty JSON
  *
@@ -27,6 +27,16 @@
  * use lemmeknow::Identifier;
  * let identifier = Identifier::default();
  * let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+ * let result_in_json = Identifier::to_json(&result);
+ * println!("{result_in_json}");
+ * ```
+ *
+ * If you want to work with bytes, i.e. `[u8]` use [`bytes::Identifier`]
+ *
+ * ```rust
+ * use lemmeknow::bytes::Identifier;
+ * let identifier = Identifier::default();
+ * let result = identifier.identify(b"UC11L3JDgDQMyH8iolKkVZ4w");
  * let result_in_json = Identifier::to_json(&result);
  * println!("{result_in_json}");
  * ```
