@@ -179,6 +179,35 @@ impl Identifier {
     }
 }
 
+// Output Implementation
+impl Identifier {
+    /// Convert [`Vec<Match>`] to JSON
+    ///
+    /// Returns prettified JSON string.
+    ///
+    /// Helpful if you want to convert possible identifications to JSON
+    /// for using in web APIs or something else.
+    ///
+    /// # Arguments
+    ///
+    /// * result: &[Match] - Reference to `Vec<Match>`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use lemmeknow::Identifier;
+    /// let identifier = Identifier::default();
+    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// let result_in_json = Identifier::to_json(&result);
+    /// println!("{result_in_json}");
+    /// ```
+    ///
+    #[inline]
+    pub fn to_json(result: &[Match]) -> String {
+        serde_json::to_string_pretty(result).unwrap_or_default()
+    }
+}
+
 // Identifier implementation for wasm
 #[cfg(target_arch = "wasm32")]
 impl Identifier {
