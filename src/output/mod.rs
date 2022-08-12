@@ -19,7 +19,7 @@
 use comfy_table::presets::UTF8_FULL;
 use comfy_table::*;
 
-use crate::identifier::Match;
+use crate::Match;
 
 /// Modes defining how the output shall be printed
 /// > Requires `cli` feature
