@@ -1,50 +1,14 @@
-//! For identifying text / analyzing files
-
-#[cfg(not(target_arch = "wasm32"))]
-use {
-    rayon::iter::{IntoParallelRefIterator, ParallelIterator},
-    std::sync::{Arc, Mutex},
-    std::{fs, str},
-};
-
-pub mod bytes;
+//! For identifying bytes
 
 use once_cell::sync::Lazy;
-use regex::Regex;
+use regex::bytes::Regex;
 use serde::Serialize;
 
 use crate::Data;
 use crate::DATA;
 
-struct RegexData {
-    compiled_regex: Regex,
-    data: Data,
-}
-
-impl RegexData {
-    fn new(compiled_regex: Regex, data: Data) -> RegexData {
-        RegexData {
-            compiled_regex,
-            data,
-        }
-    }
-}
-
 static REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_regexes);
 static BOUNDARYLESS_REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_boundaryless_regexes);
-
-/// structure containing the text and it's possible identification.
-#[derive(Serialize, Debug)]
-pub struct Match {
-    pub text: String,
-    pub data: Data,
-}
-
-impl Match {
-    pub fn new(text: String, data: Data) -> Match {
-        Match { text, data }
-    }
-}
 
 pub struct Identifier {
     /// Keep Data having minimum Rarity of supplied `min_rarity`
@@ -112,64 +76,70 @@ impl Default for Identifier {
     }
 }
 
-// Identifier implementation
+/// structure containing the bytes and it's possible identification.
+#[derive(Serialize, Debug)]
+pub struct Match {
+    pub text: Vec<u8>,
+    pub data: Data,
+}
+
+impl Match {
+    pub fn new(text: Vec<u8>, data: Data) -> Match {
+        Match { text, data }
+    }
+}
+
+struct RegexData {
+    compiled_regex: Regex,
+    data: Data,
+}
+
+impl RegexData {
+    fn new(compiled_regex: Regex, data: Data) -> RegexData {
+        RegexData {
+            compiled_regex,
+            data,
+        }
+    }
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 impl Identifier {
-    /// Identify the given text.
-    ///
-    /// This will read strings from file with text as filename if `file_support` is `true` and the file exists
+    /// Identify the given bytes.
     ///
     /// Finds all possible identifications.
     ///
     /// # Arguments
     ///
-    /// * text: &str - text which we want to identify
+    /// * text: &[u8] - text which we want to identify
     ///
     /// # Examples
     ///
     /// ```
-    /// let identifier = lemmeknow::Identifier::default();
-    /// let result = identifier.identify("UC11L3JDgDQMyH8iolKkVZ4w");
+    /// let identifier = lemmeknow::bytes::Identifier::default();
+    /// let text = b"UC11L3JDgDQMyH8iolKkVZ4w";
+    /// let result = identifier.identify(text);
     /// assert_eq!(result[0].data.name, "YouTube Channel ID");
     /// ```
     ///
-    pub fn identify(&self, text: &str) -> Vec<Match> {
+    pub fn identify(&self, text: &[u8]) -> Vec<Match> {
         let regexes = if self.boundaryless {
             &BOUNDARYLESS_REGEX_DATA
         } else {
             &REGEX_DATA
         };
 
-        if self.file_support && is_file(text) {
-            let all_matches = Arc::new(Mutex::new(Vec::<Match>::new()));
-            let strings = read_file_to_strings(text);
-            strings.par_iter().for_each(|text| {
-                regexes
-                    .par_iter()
-                    .filter(|x| is_valid_filter(self, x))
-                    .for_each(|re| {
-                        if re.compiled_regex.is_match(text) {
-                            all_matches
-                                .lock()
-                                .unwrap()
-                                .push(Match::new(text.to_string(), re.data.clone()))
-                        }
-                    })
+        // iter has almost same or sometimes better performance than par_iter for single text!
+        let mut all_matches = Vec::<Match>::new();
+        regexes
+            .iter()
+            .filter(|x| is_valid_filter(self, x))
+            .for_each(|re| {
+                if re.compiled_regex.is_match(text) {
+                    all_matches.push(Match::new(text.to_owned(), re.data.clone()))
+                }
             });
-            Arc::try_unwrap(all_matches).unwrap().into_inner().unwrap()
-        } else {
-            // iter has almost same or sometimes better performance than par_iter for single text!
-            let mut all_matches = Vec::<Match>::new();
-            regexes
-                .iter()
-                .filter(|x| is_valid_filter(self, x))
-                .for_each(|re| {
-                    if re.compiled_regex.is_match(text) {
-                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
-                    }
-                });
-            all_matches
-        }
+        all_matches
     }
 
     /// This returns the first identification.
@@ -178,20 +148,20 @@ impl Identifier {
     ///
     /// # Arguments
     ///
-    /// * text: &str - text which we want to identify
+    /// * text: &[u8] - text which we want to identify
     ///
     /// # Examples
     ///
     /// ```
-    /// let identifier = lemmeknow::Identifier::default();
-    /// let some_result = identifier.first_match("8888888888");
-    /// let not_gonna_find = identifier.first_match("a friend for swanandx");
+    /// let identifier = lemmeknow::bytes::Identifier::default();
+    /// let some_result = identifier.first_match(b"8888888888");
+    /// let not_gonna_find = identifier.first_match(b"a friend for swanandx");
     ///  
     /// assert_eq!(some_result.unwrap().data.name, "Phone Number");
     /// assert!(not_gonna_find.is_none());
     /// ```
     ///
-    pub fn first_match(&self, text: &str) -> Option<Match> {
+    pub fn first_match(&self, text: &[u8]) -> Option<Match> {
         let regexes = if self.boundaryless {
             &BOUNDARYLESS_REGEX_DATA
         } else {
@@ -206,34 +176,6 @@ impl Identifier {
         }
 
         None
-    }
-}
-
-// Identifier implementation for wasm
-#[cfg(target_arch = "wasm32")]
-impl Identifier {
-    // There is no file system on the web, so we are not reading strings from file.
-    // let the user perform the I/O and read the file, then pass the content of it.
-    pub fn identify(&self, text: &[String]) -> Vec<Match> {
-        let regexes = if self.boundaryless {
-            &BOUNDARYLESS_REGEX_DATA
-        } else {
-            &REGEX_DATA
-        };
-        let mut all_matches = Vec::<Match>::new();
-
-        text.iter().for_each(|text| {
-            regexes
-                .iter()
-                .filter(|x| is_valid_filter(self, x))
-                .for_each(|re| {
-                    if re.compiled_regex.is_match(text) {
-                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
-                    }
-                })
-        });
-
-        all_matches
     }
 }
 
@@ -266,14 +208,31 @@ impl Identifier {
     }
 }
 
-// helper functions
-// TODO: try #[inline]
-#[cfg(not(target_arch = "wasm32"))]
-fn is_file(name: &str) -> bool {
-    if let Ok(s) = fs::metadata(name) {
-        s.is_file()
-    } else {
-        false
+// Identifier implementation for wasm
+#[cfg(target_arch = "wasm32")]
+impl Identifier {
+    // There is no file system on the web, so we are not reading strings from file.
+    // let the user perform the I/O and read the file, then pass the content of it.
+    pub fn identify(&self, text: &[Vec<u8>]) -> Vec<Match> {
+        let regexes = if self.boundaryless {
+            &BOUNDARYLESS_REGEX_DATA
+        } else {
+            &REGEX_DATA
+        };
+        let mut all_matches = Vec::<Match>::new();
+
+        text.iter().for_each(|text| {
+            regexes
+                .iter()
+                .filter(|x| is_valid_filter(self, x))
+                .for_each(|re| {
+                    if re.compiled_regex.is_match(text) {
+                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
+                    }
+                })
+        });
+
+        all_matches
     }
 }
 
@@ -301,42 +260,6 @@ fn is_valid_filter(configs: &Identifier, regex_data: &RegexData) -> bool {
     }
 
     true
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn read_file_to_strings(filename: &str) -> Vec<String> {
-    let file = fs::read(filename).expect("File not found");
-
-    let mut printable_text: Vec<String> = Vec::new();
-    let mut buffer: Vec<u8> = Vec::new();
-    let mut use_current_buffer = false;
-
-    //we only need the human readable strings from the file.
-    for character in file {
-        if character.is_ascii_graphic() {
-            // Doesn't consider whitespace as a graphic!
-            use_current_buffer = true;
-            buffer.push(character);
-        } else if use_current_buffer {
-            // If the char isn't ascii graphic, that means this is the end for our string which we are interested in
-            // string with length less than 4 most likely won't be of our use.
-            // If it has length more than 4, then push it to our `printable_text`
-            if buffer.len() >= 4 {
-                printable_text.push(
-                    String::from_utf8(buffer.clone()).expect("failed to convert u8 to string"),
-                );
-            }
-
-            // Clear the buffer so that current contents of it won't affect the next string.
-            buffer.clear();
-            // We set this to false because we don't want to use buffer until we get a ascii graphic!
-            use_current_buffer = false;
-        }
-    }
-
-    printable_text.push(String::from_utf8(buffer).expect("failed to convert u8 to string"));
-
-    printable_text
 }
 
 fn build_regexes() -> Vec<RegexData> {

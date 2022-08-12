@@ -19,7 +19,7 @@
  * lemmeknow = { git = "https://github.com/swanandx/lemmeknow", default-features = false }
  * ```
  *
- * # Example: To identify a text
+ * # Example:
  *
  * Let us say we want to identify a text and then get the output as pretty JSON
  *
@@ -31,12 +31,24 @@
  * println!("{result_in_json}");
  * ```
  *
+ * If you want to work with bytes, i.e. `[u8]` use [`bytes::Identifier`]
+ *
+ * ```rust
+ * use lemmeknow::bytes::Identifier;
+ * let identifier = Identifier::default();
+ * let result = identifier.identify(b"UC11L3JDgDQMyH8iolKkVZ4w");
+ * let result_in_json = Identifier::to_json(&result);
+ * println!("{result_in_json}");
+ * ```
+ *
  * */
 
 pub mod identifier;
+pub use self::identifier::bytes;
 pub use self::identifier::Identifier;
+pub use self::identifier::Match;
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[cfg(not(target_arch = "wasm32"))]
 #[cfg(feature = "cli")]
@@ -48,35 +60,20 @@ pub use self::output::PrintMode;
 
 // TODO: Try not to use String
 /// structure for parsing data from JSON file.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Data {
-    #[serde(rename = "Name")]
-    pub name: String,
-    #[serde(rename = "Regex")]
-    pub regex: String,
+    pub name: &'static str,
+    pub regex: &'static str,
+    boundaryless: &'static str,
     pub plural_name: bool,
-    #[serde(rename = "Description")]
-    pub description: Option<String>,
-    #[serde(rename = "Rarity")]
+    pub description: Option<&'static str>,
     pub rarity: f32,
-    #[serde(rename = "URL")]
-    pub url: Option<String>,
-    #[serde(rename = "Tags")]
-    pub tags: Vec<String>,
+    pub url: Option<&'static str>,
+    pub tags: &'static [&'static str],
 }
 
-/// structure containing the text and it's possible identification.
-#[derive(Serialize, Debug)]
-pub struct Match {
-    pub text: String,
-    pub data: Data,
-}
-
-impl Match {
-    pub fn new(text: String, data: Data) -> Match {
-        Match { text, data }
-    }
-}
+// this is DATA
+include!(concat!(env!("OUT_DIR"), "/regex_data.rs"));
 
 #[cfg(test)]
 mod tests {
