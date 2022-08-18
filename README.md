@@ -65,20 +65,30 @@
 
 <br />
 
-## 🧰 Usage 
 
-Pass `TEXT` or `/PATH/TO/FILE` as argument. If you want output in JSON format, then pass `-j / --json` flag.
+## 🧰 Usage
 
-- `lemmeknow [OPTIONS] <TEXT/FILENAME>`
+```shell
+lemmeknow [OPTIONS] <TEXT/FILENAME>
+```
+<img align="center" src="https://media.discordapp.net/attachments/998569651183288351/1009151746792235048/lemmeknow_readme_ss.png?width=1440&height=242" alt="demo"/>
 
-*e.g.* `lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json` 
+<details>
+<summary>
+JSON Output
+</summary>
 
+If you want output in JSON format, then pass `-j / --json` flag.
+*e.g.* 
+```shell
+lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json
+``` 
+<img align="center" src="https://media.discordapp.net/attachments/998569651183288351/1009151747194892288/lkjosn.png?width=1440&height=512" alt="demo" />
+</details>
 
 > Run `lemmeknow --help` for all options!
 
-<p align="center">
-  <img src="images/demo.gif" alt="demo" />
-</p>
+
 
 <br />
 
@@ -91,28 +101,31 @@ Pass `TEXT` or `/PATH/TO/FILE` as argument. If you want output in JSON format, t
 
 ---
 ### Using `cargo` 🦀
-
-- `cargo install lemmeknow`
+```shell
+cargo install lemmeknow
+```
 
 ---
 ### Build it from source 🎯
 
 Clone repository
-
-- `git clone https://github.com/swanandx/lemmeknow && cd lemmeknow`
+```shell
+git clone https://github.com/swanandx/lemmeknow && cd lemmeknow
+```
 
 then build and run
-- `cargo run`
 
-*e.g.* `cargo run -- <TEXT/FILENAME> [OPTIONS]`
+```shell
+cargo run -- <TEXT/FILENAME> [OPTIONS]
+```
 
 OR
 
-- `cargo build --release`
-- `cd target/release/`
-- `./lemmeknow`
-
-e.g. `./lemmeknow <TEXT/FILENAME> [OPTIONS]`
+```shell
+cargo build --release
+cd target/release/
+./lemmeknow <TEXT/FILENAME> [OPTIONS]
+```
 
 ---
 <br />
