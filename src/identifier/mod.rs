@@ -3,7 +3,6 @@
 #[cfg(not(target_arch = "wasm32"))]
 use {
     rayon::iter::{IntoParallelRefIterator, ParallelIterator},
-    std::sync::{Arc, Mutex},
     std::{fs, str},
 };
 
@@ -141,34 +140,37 @@ impl Identifier {
         };
 
         if self.file_support && is_file(text) {
-            let all_matches = Arc::new(Mutex::new(Vec::<Match>::new()));
             let strings = read_file_to_strings(text);
-            strings.par_iter().for_each(|text| {
-                regexes
-                    .par_iter()
-                    .filter(|x| is_valid_filter(self, x))
-                    .for_each(|re| {
-                        if re.compiled_regex.is_match(text) {
-                            all_matches
-                                .lock()
-                                .unwrap()
-                                .push(Match::new(text.to_string(), re.data.clone()))
-                        }
-                    })
-            });
-            Arc::try_unwrap(all_matches).unwrap().into_inner().unwrap()
+
+            strings
+                .par_iter()
+                .map(|text| {
+                    regexes
+                        .par_iter()
+                        .filter_map(|re| {
+                            if is_valid_filter(self, re) && re.compiled_regex.is_match(text) {
+                                Some(Match::new(text.to_owned(), re.data.clone()))
+                            } else {
+                                None
+                            }
+                        })
+                        .collect::<Vec<Match>>()
+                })
+                .flatten()
+                .collect()
         } else {
             // iter has almost same or sometimes better performance than par_iter for single text!
-            let mut all_matches = Vec::<Match>::new();
+
             regexes
                 .iter()
-                .filter(|x| is_valid_filter(self, x))
-                .for_each(|re| {
-                    if re.compiled_regex.is_match(text) {
-                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
+                .filter_map(|re| {
+                    if is_valid_filter(self, re) && re.compiled_regex.is_match(text) {
+                        Some(Match::new(text.to_owned(), re.data.clone()))
+                    } else {
+                        None
                     }
-                });
-            all_matches
+                })
+                .collect()
         }
     }
 
