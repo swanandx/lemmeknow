@@ -65,6 +65,14 @@
 
 <br />
 
+<div align="center">
+  <strong>Watch the video on 
+  <a href="https://youtu.be/n92YrzELBJU">YouTube</a>
+  </strong>
+</div>
+
+<br />
+
 
 ## 🧰 Usage
 
