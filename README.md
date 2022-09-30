@@ -4,6 +4,10 @@ This branch is only for comparsion between performace of onig vs regex crate!
 
 We uses regex crate by default, if you want to use onig crate, turn on `onig` feature.
 
+```bash
+git clone -b perf git@github.com:swanandx/lemmeknow.git
+cd lemmeknow
+```
 ## steps to compile binaries
 
 ```bash
