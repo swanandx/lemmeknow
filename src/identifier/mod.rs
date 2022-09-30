@@ -9,7 +9,13 @@ use {
 pub mod bytes;
 
 use once_cell::sync::Lazy;
+
+#[cfg(feature="onig")]
+use onig::Regex;
+
+#[cfg(not(feature="onig"))]
 use regex::Regex;
+
 use serde::Serialize;
 
 use crate::Data;
