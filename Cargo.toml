@@ -46,12 +46,17 @@ clap = { version = "3.2", features = ["derive"], optional = true }
 assert_cmd = "2.0"
 assert_fs = "1.0"
 predicates = "2.1"
+criterion = "0.4"
 
 [build-dependencies]
 uneval = "0.2.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 fancy-regex = "0.10"
+
+[[bench]]
+name = "my_benchmark"
+harness = false
 
 [profile.release]
 lto = "fat"
