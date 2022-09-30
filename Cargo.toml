@@ -23,7 +23,6 @@ crate-type = ["lib"]
 [features]
 default = ["cli"]
 cli = ["comfy-table", "clap"]
-use_onig = ["onig"]
 
 [[bin]]
 name = "lemmeknow"
