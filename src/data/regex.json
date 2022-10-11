@@ -54,7 +54,7 @@
    },
    {
       "Name": "PEM-formatted Private Key",
-      "Regex": "^(-----BEGIN( ANY| RSA| DSA| ENCRYPTED| EC| OPENSSH)? PRIVATE KEY-----\\\\n?[a-zA-Z0-9/\\\\.\\\\n\\\\:\\\\+\\\\=]+-----END( ANY| RSA| DSA| ENCRYPTED| EC| OPENSSH)? PRIVATE KEY-----)$",
+      "Regex": "^(-----BEGIN( ANY| RSA| DSA| ENCRYPTED| EC| OPENSSH)? PRIVATE KEY-----\n?[a-zA-Z0-9/\\\\.\\\\n\\\\:\\\\+\\\\=]+-----END( ANY| RSA| DSA| ENCRYPTED| EC| OPENSSH)? PRIVATE KEY-----)$",
       "plural_name": false,
       "Description": null,
       "Rarity": 1,
@@ -1474,7 +1474,7 @@
    },
    {
       "Name": "Latitude & Longitude Coordinates",
-      "Regex": "(?i)^((?:(?:N|W|S|E)\\s?\\d+\\s?\\u00B0\\s?\\d+\\.?\\d*\\s?'?\\s?\\d*\\.?,?\\d*?\\\\\"?\\s?){1,2}|(?:\\d+\\s?\\u00B0\\s?\\d+\\s?'?\\s?\\d+\\.?,?\\d{0,}?\\\\\"?\\s?(?:N|W|S|E)\\s?){1,2}|(?:[-+]?(?:[0-8]?\\d+\\.\\d{4,}|90(?:\\.0+)?),\\s*[-+]?(?:180(?:\\.0+)?|(?:(?:1[0-7]\\d)|(?:[1-9]?\\d))(?:\\.\\d+)?))|(?:@\\d+\\.\\d{4,},\\d+.\\d{4,},\\d+z))$",
+      "Regex": "(?i)^((?:(?:N|W|S|E)\\s?\\d+\\s?\\u00B0\\s?\\d+\\.?\\d*\\s?'?\\s?\\d*\\.?,?\\d*?\"?\\s?){1,2}|(?:\\d+\\s?\\u00B0\\s?\\d+\\s?'?\\s?\\d+\\.?,?\\d{0,}?\"?\\s?(?:N|W|S|E)\\s?){1,2}|(?:[-+]?(?:[0-8]?\\d+\\.\\d{4,}|90(?:\\.0+)?),\\s*[-+]?(?:180(?:\\.0+)?|(?:(?:1[0-7]\\d)|(?:[1-9]?\\d))(?:\\.\\d+)?))|(?:@\\d+\\.\\d{4,},\\d+.\\d{4,},\\d+z))$",
       "plural_name": true,
       "Description": null,
       "Rarity": 0.7,
