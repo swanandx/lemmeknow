@@ -144,7 +144,7 @@ Want to use this as a crate in your project? or make a web api for it? No worrie
 
 ```toml
 [dependencies]
-lemmeknow = { version = "0.6", default-features = false }
+lemmeknow = { version = "0.7", default-features = false }
 
 ```
 
