@@ -79,7 +79,7 @@
 ```shell
 lemmeknow [OPTIONS] <TEXT/FILENAME>
 ```
-<img align="center" src="https://media.discordapp.net/attachments/998569651183288351/1009151746792235048/lemmeknow_readme_ss.png?width=1440&height=242" alt="demo"/>
+<img align="center" src="https://media.discordapp.net/attachments/869896750188625950/1032250968043171881/unknown.png" alt="demo"/>
 
 <details>
 <summary>
