@@ -108,6 +108,12 @@ lemmeknow UC11L3JDgDQMyH8iolKkVZ4w --json
  > Check releases [here](https://github.com/swanandx/lemmeknow/releases/).
 
 ---
+### Using [Nix](https://nixos.org/nix) ❄️
+```shell
+nix-env -iA nixpkgs.lemmeknow
+```
+
+---
 ### Using `cargo` 🦀
 ```shell
 cargo install lemmeknow
