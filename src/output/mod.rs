@@ -94,12 +94,19 @@ fn pretty_print(result: &[Match], output_format: PrintMode) {
         println!("\x1b[0;32mFound Possible Identifications :)\x1b[0m");
 
         result.iter().for_each(|item| {
-            let description = match (&item.data.description, &item.data.url) {
-                (Some(des), Some(url)) => format!("{des}\n Check URL: {url}{}", &item.text),
-                (Some(des), None) => des.to_string(),
-                (None, Some(url)) => format!("URL:\n {url}{}", &item.text),
-                (None, None) => "None".to_owned(),
-            };
+            let mut description = String::from(item.data.description.unwrap_or_default());
+
+            if let Some(url) = item.data.url {
+                description.push_str(&format!("URL:\n {url}{}", &item.text))
+            }
+
+            if let Some(exploit) = item.data.exploit {
+                description.push_str(&format!("Exploit:\n {exploit}"))
+            }
+
+            if description.is_empty() {
+                description.push_str("None")
+            }
 
             let mut row = vec![
                 Cell::new(&item.text),

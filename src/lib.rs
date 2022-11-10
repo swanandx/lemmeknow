@@ -67,6 +67,7 @@ pub struct Data {
     boundaryless: &'static str,
     pub plural_name: bool,
     pub description: Option<&'static str>,
+    pub exploit: Option<&'static str>,
     pub rarity: f32,
     pub url: Option<&'static str>,
     pub tags: &'static [&'static str],

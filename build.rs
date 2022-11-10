@@ -15,6 +15,8 @@ struct Data {
     plural_name: bool,
     #[serde(rename(deserialize = "Description"))]
     description: Option<&'static str>,
+    #[serde(rename(deserialize = "Exploit"))]
+    exploit: Option<String>,
     #[serde(rename(deserialize = "Rarity"))]
     rarity: f32,
     #[serde(rename(deserialize = "URL"))]
