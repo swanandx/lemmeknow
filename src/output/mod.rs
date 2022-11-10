@@ -97,11 +97,11 @@ fn pretty_print(result: &[Match], output_format: PrintMode) {
             let mut description = String::from(item.data.description.unwrap_or_default());
 
             if let Some(url) = item.data.url {
-                description.push_str(&format!("URL:\n {url}{}", &item.text))
+                description.push_str(&format!(" URL: {url}{}\n", &item.text))
             }
 
             if let Some(exploit) = item.data.exploit {
-                description.push_str(&format!("Exploit:\n {exploit}"))
+                description.push_str(&format!("Exploit: {exploit}"))
             }
 
             if description.is_empty() {
@@ -110,13 +110,13 @@ fn pretty_print(result: &[Match], output_format: PrintMode) {
 
             let mut row = vec![
                 Cell::new(&item.text),
-                Cell::new(&item.data.name),
+                Cell::new(item.data.name),
                 Cell::new(description),
             ];
 
             if let PrintMode::Verbose = output_format {
                 row.extend([
-                    Cell::new(&item.data.rarity),
+                    Cell::new(item.data.rarity),
                     Cell::new(&item.data.tags.join(", ")),
                 ]);
             }
