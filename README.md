@@ -114,6 +114,12 @@ cargo install lemmeknow
 ```
 
 ---
+### Using [Nix](https://nixos.org/nix) ❄️
+```shell
+nix-env -iA nixpkgs.lemmeknow
+```
+
+---
 ### Build it from source 🎯
 
 Clone repository
