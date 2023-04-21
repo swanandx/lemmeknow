@@ -117,7 +117,7 @@ fn pretty_print(result: &[Match], output_format: PrintMode) {
             if let PrintMode::Verbose = output_format {
                 row.extend([
                     Cell::new(item.data.rarity),
-                    Cell::new(&item.data.tags.join(", ")),
+                    Cell::new(item.data.tags.join(", ")),
                 ]);
             }
 

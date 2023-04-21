@@ -47,7 +47,7 @@ fn main() {
     let out_dir = env::var_os("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join("regex_data.rs");
     fs::write(
-        &dest_path,
+        dest_path,
         format!("const DATA: [Data; {}] = {};", data.len(), out_data_str),
     )
     .unwrap();
