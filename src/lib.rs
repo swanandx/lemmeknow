@@ -58,7 +58,6 @@ pub mod output;
 #[cfg(feature = "cli")]
 pub use self::output::PrintMode;
 
-// TODO: Try not to use String
 /// structure for parsing data from JSON file.
 #[derive(Serialize, Debug, Clone)]
 pub struct Data {
@@ -74,7 +73,7 @@ pub struct Data {
 }
 
 // this is DATA
-include!(concat!(env!("OUT_DIR"), "/regex_data.rs"));
+include!(concat!(env!("OUT_DIR"), "/data.rs"));
 
 #[cfg(test)]
 mod tests {

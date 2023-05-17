@@ -15,22 +15,8 @@ use serde::Serialize;
 use crate::Data;
 use crate::DATA;
 
-struct RegexData {
-    compiled_regex: Regex,
-    data: Data,
-}
-
-impl RegexData {
-    fn new(compiled_regex: Regex, data: Data) -> RegexData {
-        RegexData {
-            compiled_regex,
-            data,
-        }
-    }
-}
-
-static REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_regexes);
-static BOUNDARYLESS_REGEX_DATA: Lazy<Vec<RegexData>> = Lazy::new(build_boundaryless_regexes);
+// this is REGEX_DATA and BOUNDARYLESS_REGEX_DATA
+include!(concat!(env!("OUT_DIR"), "/regex_data.rs"));
 
 /// structure containing the text and it's possible identification.
 #[derive(Serialize, Debug)]
@@ -134,9 +120,9 @@ impl Identifier {
     ///
     pub fn identify(&self, text: &str) -> Vec<Match> {
         let regexes = if self.boundaryless {
-            &BOUNDARYLESS_REGEX_DATA
+            &BOUNDARYLESS_REGEX
         } else {
-            &REGEX_DATA
+            &REGEX
         };
 
         if self.file_support && is_file(text) {
@@ -145,11 +131,11 @@ impl Identifier {
             strings
                 .par_iter()
                 .map(|text| {
-                    regexes
-                        .par_iter()
-                        .filter_map(|re| {
-                            if is_valid_filter(self, re) && re.compiled_regex.is_match(text) {
-                                Some(Match::new(text.to_owned(), re.data.clone()))
+                    DATA.iter()
+                        .enumerate()
+                        .filter_map(|(i, e)| {
+                            if is_valid_filter(self, e) && regexes[i].is_match(text) {
+                                Some(Match::new(text.to_owned(), e.clone()))
                             } else {
                                 None
                             }
@@ -160,17 +146,16 @@ impl Identifier {
                 .collect()
         } else {
             // iter has almost same or sometimes better performance than par_iter for single text!
-
-            regexes
-                .iter()
-                .filter_map(|re| {
-                    if is_valid_filter(self, re) && re.compiled_regex.is_match(text) {
-                        Some(Match::new(text.to_owned(), re.data.clone()))
+            DATA.iter()
+                .enumerate()
+                .filter_map(|(i, e)| {
+                    if is_valid_filter(self, e) && regexes[i].is_match(text) {
+                        Some(Match::new(text.to_owned(), e.clone()))
                     } else {
                         None
                     }
                 })
-                .collect()
+                .collect::<Vec<Match>>()
         }
     }
 
@@ -195,15 +180,19 @@ impl Identifier {
     ///
     pub fn first_match(&self, text: &str) -> Option<Match> {
         let regexes = if self.boundaryless {
-            &BOUNDARYLESS_REGEX_DATA
+            &BOUNDARYLESS_REGEX
         } else {
-            &REGEX_DATA
+            &REGEX
         };
 
-        for re in regexes.iter().filter(|x| is_valid_filter(self, x)) {
+        for (i, x) in DATA
+            .iter()
+            .enumerate()
+            .filter(|(_, x)| is_valid_filter(self, x))
+        {
             // only consider the regex which compiles!
-            if re.compiled_regex.is_match(text) {
-                return Some(Match::new(text.to_owned(), re.data.clone()));
+            if regexes[i].is_match(text) {
+                return Some(Match::new(text.to_owned(), x.clone()));
             }
         }
 
@@ -218,24 +207,21 @@ impl Identifier {
     // let the user perform the I/O and read the file, then pass the content of it.
     pub fn identify(&self, text: &[String]) -> Vec<Match> {
         let regexes = if self.boundaryless {
-            &BOUNDARYLESS_REGEX_DATA
+            &BOUNDARYLESS_REGEX
         } else {
-            &REGEX_DATA
+            &REGEX
         };
-        let mut all_matches = Vec::<Match>::new();
 
-        text.iter().for_each(|text| {
-            regexes
-                .iter()
-                .filter(|x| is_valid_filter(self, x))
-                .for_each(|re| {
-                    if re.compiled_regex.is_match(text) {
-                        all_matches.push(Match::new(text.to_owned(), re.data.clone()))
-                    }
-                })
-        });
-
-        all_matches
+        DATA.iter()
+            .enumerate()
+            .filter_map(|(i, e)| {
+                if is_valid_filter(self, e) && regexes[i].is_match(text) {
+                    Some(Match::new(text.to_owned(), e.clone()))
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<Match>>()
     }
 }
 
@@ -279,25 +265,25 @@ fn is_file(name: &str) -> bool {
     }
 }
 
-fn is_valid_filter(configs: &Identifier, regex_data: &RegexData) -> bool {
-    if regex_data.data.rarity < configs.min_rarity {
+fn is_valid_filter(configs: &Identifier, regex_data: &Data) -> bool {
+    if regex_data.rarity < configs.min_rarity {
         return false;
     }
-    if regex_data.data.rarity > configs.max_rarity {
+    if regex_data.rarity > configs.max_rarity {
         return false;
     }
 
     if configs
         .tags
         .iter()
-        .any(|y| !regex_data.data.tags.iter().any(|x| x == y))
+        .any(|y| !regex_data.tags.iter().any(|x| x == y))
     {
         return false;
     }
     if configs
         .exclude_tags
         .iter()
-        .any(|y| regex_data.data.tags.iter().any(|x| x == y))
+        .any(|y| regex_data.tags.iter().any(|x| x == y))
     {
         return false;
     }
@@ -339,32 +325,4 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
     printable_text.push(String::from_utf8(buffer).expect("failed to convert u8 to string"));
 
     printable_text
-}
-
-fn build_regexes() -> Vec<RegexData> {
-    let mut regexes: Vec<RegexData> = Vec::new();
-
-    for data in DATA.iter() {
-        // Some regex from pywhat's regex.json might not work with fancy_regex
-        // So we are just considering the ones which are valid.
-        let result = Regex::new(data.regex); //call .unwrap() here if you want to see which regexes fail
-        if let Ok(result) = result {
-            regexes.push(RegexData::new(result, data.to_owned()))
-        }
-    }
-    regexes
-}
-
-fn build_boundaryless_regexes() -> Vec<RegexData> {
-    let mut regexes: Vec<RegexData> = Vec::new();
-
-    for data in DATA.iter() {
-        // Some regex from pywhat's regex.json might not work with fancy_regex
-        // So we are just considering the ones which are valid.
-        let result = Regex::new(data.boundaryless); //call .unwrap() here if you want to see which regexes fail
-        if let Ok(result) = result {
-            regexes.push(RegexData::new(result, data.to_owned()))
-        }
-    }
-    regexes
 }

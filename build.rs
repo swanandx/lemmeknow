@@ -1,6 +1,7 @@
 use std::{env, fs, path::Path};
 
-use fancy_regex::Regex;
+use fancy_regex::Regex as Fancy;
+use regex::Regex;
 use serde::Deserialize;
 
 #[allow(dead_code)]
@@ -29,26 +30,53 @@ fn main() {
     let mut data: Vec<Data> = serde_json::from_str(include_str!("./src/data/regex.json")).unwrap();
 
     data.iter_mut().for_each(|d| {
-        d.boundaryless = Regex::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
+        d.boundaryless = Fancy::new(r"(?<!\\)\^(?![^\[\]]*(?<!\\)\])")
             .expect("can't compile for boundaryless")
             .replace(&d.regex, "")
             .to_string();
-        d.boundaryless = Regex::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
+        d.boundaryless = Fancy::new(r"(?<!\\)\$(?![^\[\]]*(?<!\\)\])")
             .expect("can't compile for boundaryless")
             .replace(&d.boundaryless, "")
             .to_string();
     });
 
-    let mut out_data_str = format!("{:?}", data);
+    data.retain(|r| Regex::new(&r.regex).is_ok() && Regex::new(&r.boundaryless).is_ok());
 
+    let mut data_str = format!("{:?}", data);
     // we want reference to [], i.e. &[]
-    out_data_str = out_data_str.replace("tags: [", "tags: &[");
+    data_str = data_str.replace("tags: [", "tags: &[");
 
+    let regex_str: String = data
+        .iter()
+        .map(|d| format!(r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#, d.regex))
+        .collect();
+
+    let boundaryless_regex_str: String = data
+        .iter()
+        .map(|d| {
+            format!(
+                r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#,
+                d.boundaryless
+            )
+        })
+        .collect();
+
+    let count = data.len();
+    let final_str = format!(
+        r#"
+        const DATA: [Data; {count}] = {data_str};
+    "#
+    );
     let out_dir = env::var_os("OUT_DIR").unwrap();
-    let dest_path = Path::new(&out_dir).join("regex_data.rs");
-    fs::write(
-        dest_path,
-        format!("const DATA: [Data; {}] = {};", data.len(), out_data_str),
-    )
-    .unwrap();
+    let dest_path = Path::new(&out_dir).join("data.rs");
+    fs::write(dest_path, final_str).unwrap();
+
+    let final_str = format!(
+        r#"
+        static REGEX: [Lazy<Regex>; {count}] = [{regex_str}];
+        static BOUNDARYLESS_REGEX: [Lazy<Regex>; {count}] = [{boundaryless_regex_str}];
+    "#
+    );
+    let regex_dest_path = Path::new(&out_dir).join("regex_data.rs");
+    fs::write(regex_dest_path, final_str).unwrap();
 }
