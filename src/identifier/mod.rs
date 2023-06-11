@@ -212,16 +212,17 @@ impl Identifier {
             &REGEX
         };
 
-        DATA.iter()
-            .enumerate()
-            .filter_map(|(i, e)| {
-                if is_valid_filter(self, e) && regexes[i].is_match(text) {
-                    Some(Match::new(text.to_owned(), e.clone()))
-                } else {
-                    None
-                }
+        text.iter()
+            .flat_map(|text| {
+                DATA.iter().enumerate().filter_map(|(i, e)| {
+                    if is_valid_filter(self, e) && regexes[i].is_match(text) {
+                        Some(Match::new(text.to_owned(), e.clone()))
+                    } else {
+                        None
+                    }
+                })
             })
-            .collect::<Vec<Match>>()
+            .collect()
     }
 }
 
