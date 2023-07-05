@@ -181,6 +181,23 @@
       }
    },
    {
+      "Name": "picoCTF Flag Format",
+      "Regex": "(?i)^(picoCTF\\{.*\\})$",
+      "plural_name": false,
+      "Description": "Used for Capture The Flags at https://picoctf.org",
+      "Rarity": 1,
+      "URL": null,
+      "Tags": [
+         "CTF Flag"
+      ],
+      "Examples": {
+         "Valid": [
+            "picoCTF{hello}"
+         ],
+         "Invalid": []
+      }
+   },
+   {
       "Name": "YouTube Video",
       "Regex": "^(https?://(?:youtu\\.be/|(?:[a-z]{2,3}\\.)?youtube\\.com/watch(?:\\?|#!)v=)([\\w-]{11}))$",
       "plural_name": false,
