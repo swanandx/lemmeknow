@@ -1,8 +1,8 @@
-use std::{env, fs, path::Path};
-
 use fancy_regex::Regex as Fancy;
 use regex::Regex;
 use serde::Deserialize;
+use std::fmt::Write;
+use std::{env, fs, path::Path};
 
 #[allow(dead_code)]
 #[derive(Deserialize, Debug)]
@@ -46,20 +46,23 @@ fn main() {
     // we want reference to [], i.e. &[]
     data_str = data_str.replace("tags: [", "tags: &[");
 
-    let regex_str: String = data
-        .iter()
-        .map(|d| format!(r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#, d.regex))
-        .collect();
+    let regex_str: String = data.iter().fold(String::new(), |mut output, d| {
+        let _ = write!(
+            output,
+            r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#,
+            d.regex
+        );
+        output
+    });
 
-    let boundaryless_regex_str: String = data
-        .iter()
-        .map(|d| {
-            format!(
-                r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#,
-                d.boundaryless
-            )
-        })
-        .collect();
+    let boundaryless_regex_str: String = data.iter().fold(String::new(), |mut output, d| {
+        let _ = write!(
+            output,
+            r#"Lazy::new(|| Regex::new({:?}).unwrap()),"#,
+            d.boundaryless
+        );
+        output
+    });
 
     let count = data.len();
     let final_str = format!(
